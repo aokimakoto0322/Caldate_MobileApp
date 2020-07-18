@@ -47,6 +47,7 @@ dependencies:
   sa_stateless_animation: ^1.0.1
   image_picker: ^0.6.7+3
   path_provider: ^1.6.11
+  rate_my_app: ^0.6.1+6
 
 
 

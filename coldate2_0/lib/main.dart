@@ -17,6 +17,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:supercharged/supercharged.dart';
 import 'models.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 
 int todaycal;
 var flag = true;
@@ -36,6 +37,10 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+
+
+  
+
 class _MyAppState extends State<MyApp> {
   //admobの設定
   @override
@@ -43,6 +48,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     FirebaseAdMob.instance
         .initialize(appId: 'ca-app-pub-8627512781946422/9988986141');
+
+
+    
   }
 
   //--admobの設定
@@ -93,6 +101,8 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
 }
 
 class Home extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -248,80 +258,59 @@ class Intro extends StatelessWidget {
           .pushReplacement(new MaterialPageRoute(builder: (context) => Home())),
       pages: [
         PageViewModel(
-          title: "はじめまして",
-          body: '簡単にアプリの使い方を説明します',
-          image: Center(
-            child: Image.asset(
-              'assets/images/splashicon.png',
-              height: 150,
-            ),
-          ),
-          decoration: PageDecoration(
-            pageColor: Colors.blue[100]
-          )
-        ),
-        PageViewModel(
-          title: "カロリーを保存する",
-          body: "食べたカロリー分数字をタップし、「今日の摂取カロリーに追加する」を押すと食べた分蓄積されます。\n\n食べた物のカロリーが分からない場合は「メニュー一覧」から食べた物を選択すれば、追加できます。",
-          image: Container(
-            margin: EdgeInsets.only(top: 80),
-            child: Center(
+            title: "はじめまして",
+            body: '簡単にアプリの使い方を説明します',
+            image: Center(
               child: Image.asset(
-                'assets/images/introduce2.gif',
+                'assets/images/splashicon.png',
+                height: 150,
               ),
             ),
-          ),
-          decoration: PageDecoration(
-            pageColor: Colors.orange[100]
-          )
-        ),
+            decoration: PageDecoration(pageColor: Colors.blue[100])),
         PageViewModel(
-          title: "振り返る",
-          body:
-              "真ん中のタブでは、過去摂取したカロリーをグラフで見ることができます。",
-          image: Container(
-            margin: EdgeInsets.only(top: 80),
-            child: Center(
-              child: Image.asset(
-                'assets/images/introduce3.jpg'
+            title: "カロリーを保存する",
+            body:
+                "食べたカロリー分数字をタップし、「今日の摂取カロリーに追加する」を押すと食べた分蓄積されます。\n\n食べた物のカロリーが分からない場合は「メニュー一覧」から食べた物を選択すれば、追加できます。",
+            image: Container(
+              margin: EdgeInsets.only(top: 80),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/introduce2.gif',
+                ),
               ),
             ),
-          ),
-          decoration: PageDecoration(
-            pageColor: Colors.pink[100]
-          )
-        ),
+            decoration: PageDecoration(pageColor: Colors.orange[100])),
         PageViewModel(
-          title: "基礎代謝を測る",
-          body: "一番右のタブで基礎代謝を計算することができます。\nやり方は項目を入力するだけでできます。\n結果は一番上に表示されます。",
-          decoration: PageDecoration(
-            pageColor: Colors.lime[100]
-          ),
-          image: Container(
-            margin: EdgeInsets.only(top: 80),
-            child: Center(
-              child: Image.asset(
-                'assets/images/introduce4.PNG'
+            title: "振り返る",
+            body: "真ん中のタブでは、過去摂取したカロリーをグラフで見ることができます。",
+            image: Container(
+              margin: EdgeInsets.only(top: 80),
+              child: Center(
+                child: Image.asset('assets/images/introduce3.jpg'),
               ),
             ),
-          )
-        ),
+            decoration: PageDecoration(pageColor: Colors.pink[100])),
         PageViewModel(
-          title: "自分好みのアプリにする",
-          body:
-              "画面左上のメニュー「設定」から、背景を選択しあなた好みの見た目に変えることができます。",
-          decoration: PageDecoration(
-            pageColor: Colors.indigo[100]
-          ),
-          image: Container(
-            margin: EdgeInsets.only(top: 80),
-            child: Center(
-              child: Image.asset(
-                'assets/images/introduce5.jpg'
+            title: "基礎代謝を測る",
+            body:
+                "一番右のタブで基礎代謝を計算することができます。\nやり方は項目を入力するだけでできます。\n結果は一番上に表示されます。",
+            decoration: PageDecoration(pageColor: Colors.lime[100]),
+            image: Container(
+              margin: EdgeInsets.only(top: 80),
+              child: Center(
+                child: Image.asset('assets/images/introduce4.PNG'),
               ),
-            ),
-          )
-        )
+            )),
+        PageViewModel(
+            title: "自分好みのアプリにする",
+            body: "画面左上のメニュー「設定」から、背景を選択しあなた好みの見た目に変えることができます。",
+            decoration: PageDecoration(pageColor: Colors.indigo[100]),
+            image: Container(
+              margin: EdgeInsets.only(top: 80),
+              child: Center(
+                child: Image.asset('assets/images/introduce5.jpg'),
+              ),
+            ))
       ],
       done: const Text('はじめる'),
     );

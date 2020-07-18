@@ -10,6 +10,7 @@ import 'colcounter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'MenuPage.dart';
 import 'file_controller.dart';
+import 'package:rate_my_app/rate_my_app.dart';
 
 colcounter _col = new colcounter();
 //メソッドチャンネルの設定
@@ -27,6 +28,16 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _animation;
 
+  RateMyApp _rateMyApp = RateMyApp(
+    preferencesPrefix: 'rateMyApp',
+    minDays: 3,
+    minLaunches: 7,
+    remindDays: 2,
+    remindLaunches: 5,
+    appStoreIdentifier: '1487352735',
+    googlePlayIdentifier: 'com.makotoaoki.Caldate2'
+  );
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +47,38 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
       duration: const Duration(milliseconds: 800),
     );
     _animation = _controller;
+
+    _rateMyApp.init().then((value) {
+      if(_rateMyApp.shouldOpenDialog){
+        _rateMyApp.showStarRateDialog(
+          context,
+          title: 'Caldateをご利用いただき\nありがとうございます！',
+          message: 'レビューでの応援が何よりの励みになります！',
+          actionsBuilder: (context, stars) {
+            return [
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () async{
+                  print('Thanks for the' + (stars == null ? '0' : stars.round().toString()) + ' star(s) !');
+                  await _rateMyApp.callEvent(RateMyAppEventType.rateButtonPressed);
+                  Navigator.pop<RateMyAppDialogButton>(context, RateMyAppDialogButton.rate);
+                },
+              )
+            ];
+          },
+          dialogStyle: DialogStyle(
+            titleAlign: TextAlign.center,
+            messageAlign: TextAlign.center,
+            messagePadding: EdgeInsets.only(bottom: 20)
+          ),
+          starRatingOptions: StarRatingOptions(),
+          onDismissed: () => _rateMyApp.callEvent(RateMyAppEventType.laterButtonPressed),
+        );
+      }
+    });
+
+
+
   }
 
   @override

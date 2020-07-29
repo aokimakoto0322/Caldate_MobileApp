@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:coldate2_0/Okotowari.dart';
+import 'package:coldate2_0/Piechart.dart';
 import 'package:coldate2_0/SettingPage.dart';
 import 'package:coldate2_0/file_controller.dart';
 import 'package:coldate2_0/metabo.dart';
@@ -13,7 +14,6 @@ import 'graphlayout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:supercharged/supercharged.dart';
 import 'models.dart';
@@ -48,12 +48,10 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     FirebaseAdMob.instance
         .initialize(appId: 'ca-app-pub-8627512781946422/9988986141');
-
-
-    
   }
-
   //--admobの設定
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -137,7 +135,7 @@ class Home extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return DefaultTabController(
-                    length: 3,
+                    length: 4,
                     child: Scaffold(
                       backgroundColor: Colors.transparent,
                       drawer: Drawer(
@@ -197,19 +195,25 @@ class Home extends StatelessWidget {
                             isScrollable: true,
                             tabs: <Widget>[
                               Container(
-                                width: size.width / 3,
+                                width: size.width / 4,
                                 child: Tab(
                                   child: Icon(Icons.home),
                                 ),
                               ),
                               Container(
-                                width: size.width / 3,
+                                width: size.width / 4,
                                 child: Tab(
                                   child: Icon(Icons.equalizer),
                                 ),
                               ),
                               Container(
-                                width: size.width / 3,
+                                width: size.width / 4,
+                                child: Tab(
+                                  child: Icon(Icons.pie_chart),
+                                ),
+                              ),
+                              Container(
+                                width: size.width / 4,
                                 child: Tab(child: Icon(Icons.fastfood)),
                               )
                             ],
@@ -221,6 +225,7 @@ class Home extends StatelessWidget {
                         children: <Widget>[
                           Summary(),
                           graphlayout(),
+                          Piechart(),
                           metabo(),
                         ],
                       ),

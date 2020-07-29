@@ -29,14 +29,13 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
   Animation<double> _animation;
 
   RateMyApp _rateMyApp = RateMyApp(
-    preferencesPrefix: 'rateMyApp',
-    minDays: 3,
-    minLaunches: 7,
-    remindDays: 2,
-    remindLaunches: 5,
-    appStoreIdentifier: '1487352735',
-    googlePlayIdentifier: 'com.makotoaoki.Caldate2'
-  );
+      preferencesPrefix: 'rateMyApp',
+      minDays: 3,
+      minLaunches: 7,
+      remindDays: 2,
+      remindLaunches: 5,
+      appStoreIdentifier: '1487352735',
+      googlePlayIdentifier: 'com.makotoaoki.Caldate2');
 
   @override
   void initState() {
@@ -49,36 +48,37 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
     _animation = _controller;
 
     _rateMyApp.init().then((value) {
-      if(_rateMyApp.shouldOpenDialog){
+      if (_rateMyApp.shouldOpenDialog) {
         _rateMyApp.showStarRateDialog(
           context,
           title: 'Caldateをご利用いただき\nありがとうございます！',
-          message: 'レビューでの応援が何よりの励みになります！',
+          message: 'レビューでの応援が何よりの励みになります！\nお手数おかけして申し訳ありません。もしよろしければレビューをお願いいたします。',
           actionsBuilder: (context, stars) {
             return [
               FlatButton(
                 child: Text('OK'),
-                onPressed: () async{
-                  print('Thanks for the' + (stars == null ? '0' : stars.round().toString()) + ' star(s) !');
-                  await _rateMyApp.callEvent(RateMyAppEventType.rateButtonPressed);
-                  Navigator.pop<RateMyAppDialogButton>(context, RateMyAppDialogButton.rate);
+                onPressed: () async {
+                  print('Thanks for the' +
+                      (stars == null ? '0' : stars.round().toString()) +
+                      ' star(s) !');
+                  await _rateMyApp
+                      .callEvent(RateMyAppEventType.rateButtonPressed);
+                  Navigator.pop<RateMyAppDialogButton>(
+                      context, RateMyAppDialogButton.rate);
                 },
               )
             ];
           },
           dialogStyle: DialogStyle(
-            titleAlign: TextAlign.center,
-            messageAlign: TextAlign.center,
-            messagePadding: EdgeInsets.only(bottom: 20)
-          ),
+              titleAlign: TextAlign.center,
+              messageAlign: TextAlign.center,
+              messagePadding: EdgeInsets.only(bottom: 20)),
           starRatingOptions: StarRatingOptions(),
-          onDismissed: () => _rateMyApp.callEvent(RateMyAppEventType.laterButtonPressed),
+          onDismissed: () =>
+              _rateMyApp.callEvent(RateMyAppEventType.laterButtonPressed),
         );
       }
     });
-
-
-
   }
 
   @override
@@ -486,20 +486,22 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
                                         print(pl.length);
                                       });
                                     }))),
-                        FadeAnimation(1.1, Container(
-                          child: RaisedButton(
-                            child: Text('メニュー一覧'),
-                            shape: StadiumBorder(),
-                            onPressed: () {
-                              myInterstitial2.show();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) {
-                                  return MenuPage();
+                        FadeAnimation(
+                            1.1,
+                            Container(
+                              child: RaisedButton(
+                                child: Text('メニュー一覧'),
+                                shape: StadiumBorder(),
+                                onPressed: () {
+                                  myInterstitial2.show();
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) {
+                                      return MenuPage();
+                                    },
+                                  ));
                                 },
-                              ));
-                            },
-                          ),
-                        )),
+                              ),
+                            )),
                         SizedBox(
                           height: 250,
                         )

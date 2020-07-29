@@ -52,60 +52,63 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            pinned: false,
-            snap: true,
-            expandedHeight: 50,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(left: 50),
-              title: Align(
-                alignment: Alignment.bottomCenter,
-                child: TextField(
-                  controller: _controller,
-                  onChanged: (value) {
-                    value = value.toLowerCase();
-                    setState(() {
-                      _noteForDisplay = _notes.where((element) {
-                        var mesiTitle = element.mesiname.toLowerCase();
-                        return mesiTitle.contains(value);
-                      }).toList();
-                    });
-                  },
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.black38,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.clear,
+      body: Container(
+        margin: EdgeInsets.only(bottom: 100),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              floating: true,
+              pinned: false,
+              snap: true,
+              expandedHeight: 50,
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.only(left: 50),
+                title: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: TextField(
+                    controller: _controller,
+                    onChanged: (value) {
+                      value = value.toLowerCase();
+                      setState(() {
+                        _noteForDisplay = _notes.where((element) {
+                          var mesiTitle = element.mesiname.toLowerCase();
+                          return mesiTitle.contains(value);
+                        }).toList();
+                      });
+                    },
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search,
                           color: Colors.black38,
                         ),
-                        onPressed: () {
-                          _controller.clear();
-                        },
-                      ),
-                      hintText: 'Search',
-                      border: InputBorder.none),
-                  style: TextStyle(fontSize: 25),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.black38,
+                          ),
+                          onPressed: () {
+                            _controller.clear();
+                          },
+                        ),
+                        hintText: 'Search',
+                        border: InputBorder.none),
+                    style: TextStyle(fontSize: 25),
+                  ),
                 ),
               ),
             ),
-          ),
-          SliverFixedExtentList(
-            itemExtent: 100,
-            delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
-              return _listItem(index);
-            }, childCount: _noteForDisplay.length),
-          )
-        ],
+            SliverFixedExtentList(
+              itemExtent: 100,
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
+                return _listItem(index);
+              }, childCount: _noteForDisplay.length),
+            )
+          ],
+        ),
       ),
       floatingActionButton: Container(
-        margin: EdgeInsets.only(bottom: 100),
+        margin: EdgeInsets.only(bottom: 110),
         child: FloatingActionButton.extended(
           label: Text(
             mesicalsub.toString(),

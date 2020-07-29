@@ -716,6 +716,22 @@ class _GraphState extends State<graphlayout>
                                               child: Column(
                                                 children: <Widget>[
                                                   SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Container(
+                                                    height: 50,
+                                                    child: FlatButton(
+                                                      child: Icon(
+                                                        Icons.clear,
+                                                        color: Colors.white,
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      
+                                                    ),
+                                                  ),
+                                                  SizedBox(
                                                     height: 100,
                                                   ),
                                                   Text(

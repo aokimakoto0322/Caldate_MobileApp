@@ -173,7 +173,7 @@ class Home extends StatelessWidget {
                                   showAboutDialog(
                                       context: context,
                                       applicationName: "Coldate",
-                                      applicationVersion: '2.0',
+                                      applicationVersion: '2.0.2',
                                       applicationLegalese: '2020 Coldate',
                                       applicationIcon: Image.asset(
                                           'assets/images/splashicon.png',
@@ -295,6 +295,17 @@ class Intro extends StatelessWidget {
               ),
             ),
             decoration: PageDecoration(pageColor: Colors.pink[100])),
+        PageViewModel(
+          title: '比較する',
+          body: '基礎代謝に対して、今日どのくらいの割合でカロリーを摂取したか確認することができます。\n\n※この機能を使用するには、基礎代謝を測定する必要があります。測定方法は次ページにあります。',
+          decoration: PageDecoration(pageColor: Colors.yellow[100]),
+          image: Container(
+            margin: EdgeInsets.only(top: 80),
+            child: Center(
+              child: Image.asset('assets/images/introduce6.png'),
+            ),            
+          )
+        ),
         PageViewModel(
             title: "基礎代謝を測る",
             body:

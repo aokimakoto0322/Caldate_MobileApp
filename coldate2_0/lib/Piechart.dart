@@ -94,12 +94,12 @@ class _PiechartState extends State<Piechart> {
                                       show: false
                                     ),
                                     sectionsSpace: 0,
-                                    centerSpaceRadius: 20,
+                                    centerSpaceRadius: 50,
                                     // ignore: missing_return
                                     sections: List.generate(2, (index) {
                                       final isTouched = index == touchedIndex;
-                                      final double fontSize = isTouched ? 30 : 25;
-                                      final double radius = isTouched ? 160 : 140;
+                                      final double fontSize = isTouched ? 26 : 22;
+                                      final double radius = isTouched ? 140 : 120;
                                       switch(index){
                                         case 0:
                                           return PieChartSectionData(

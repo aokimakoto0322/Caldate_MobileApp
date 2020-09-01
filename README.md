@@ -6,7 +6,8 @@
 
 
 
-<p>基礎代謝, カロリー記録アプリ - Caldateは日々摂取したカロリーを保存し振り返り確認することで健康状態を確認することができます。</p>
+<p>基礎代謝, カロリー記録アプリ - Caldateは日々摂取したカロリーを保存し振り返り確認することで健康状態を確認することができるアプリケーションです。</p>
+<p>対応OSはAndroidとiOSになります。</p>
 <ui>
     <li><a href="https://play.google.com/store/apps/details?id=com.makotoaoki.Caldate2">android版</a></li>
     <li><a href="https://apps.apple.com/us/app/id1487352735">iOS版</a></li>

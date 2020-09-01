@@ -21,3 +21,4 @@
 </ui>
 
 <h3 name="func1">カロリー保存</h3>
+<p>記入されたカロリー量を保存します。保存先はアプリ内に作成されたDBに保存されます。DBについては<a href="https://pub.dev/packages/sqflite">sqlite</a>を使用しております。</p>

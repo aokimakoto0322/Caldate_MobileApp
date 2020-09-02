@@ -15,10 +15,10 @@
 
 <h2>使用言語</h2>
 <ui>
-    <li>Dart 1.20.2</li>
-    <li>Kotlin 1.4.0</li>
-    <li>Swift 5.2.4</li>
-    <li>Swift UI</li>
+    <li><a href="https://dart.dev/">Dart 1.20.2</a></li>
+    <li><a href="https://kotlinlang.org/">Kotlin 1.4.0</a></li>
+    <li><a href="https://developer.apple.com/jp/swift/">Swift 5.2.4</a></li>
+    <li><a href="https://developer.apple.com/jp/xcode/swiftui/">Swift UI</a></li>
 </ui>
 
 <h2>機能</h2>

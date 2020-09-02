@@ -13,6 +13,14 @@
     <li><a href="https://apps.apple.com/us/app/id1487352735">iOS版</a></li>
 </ui>
 
+<h2>使用言語</h2>
+<ui>
+    <li>Dart 1.20.2</li>
+    <li>Kotlin 1.4.0</li>
+    <li>Swift 5.2.4</li>
+    <li>Swift UI</li>
+</ui>
+
 <h2>機能</h2>
 <ui>
     <li><a href="#func1">カロリー保存</a></li>

@@ -25,6 +25,9 @@
 <p>記入されたカロリー量を保存します。保存先はアプリ内に作成されたDBに保存されます。DBについては<a href="https://pub.dev/packages/sqflite">sqflite</a>を使用しております。</p>
 <p>保存する日にちはスマートフォン端末内の日にちより取得してDBにカロリーと共に保存されます。</p>
 
+![intro1](https://user-images.githubusercontent.com/43976208/91918972-76131880-ecff-11ea-9fe9-970a596e03aa.png)
+
+
 <h3 name="func2">保存したカロリーのグラフ描画</h3>
 <p>DBに保存されたデータの過去7日分をサマリーとして表示します。グラフの描画には<a href="https://pub.dev/packages/fl_chart">FLChart</a>
 を使用しております。</p>

@@ -51,8 +51,9 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
       if (_rateMyApp.shouldOpenDialog) {
         _rateMyApp.showStarRateDialog(
           context,
-          title: 'Caldateをご利用いただき\nありがとうございます！',
-          message: 'レビューでの応援が何よりの励みになります！\nお手数おかけして申し訳ありません。もしよろしければレビューをお願いいたします。',
+          title: 'ご利用ありがとうございます。',
+          message:
+              'アプリの使い心地はいかがですか？\nもし気に入っていただけたら応援レビューをお願いいたします。\nご協力ありがとうございます。',
           actionsBuilder: (context, stars) {
             return [
               FlatButton(

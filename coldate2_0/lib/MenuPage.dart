@@ -18,7 +18,6 @@ class _MenuPageState extends State<MenuPage> {
   List<Mesi> _noteForDisplay = List<Mesi>();
   var now = DateTime.now();
   var mesicalsub = 0;
-  
 
   var _controller = TextEditingController();
 
@@ -98,7 +97,7 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
             SliverFixedExtentList(
-              itemExtent: 100,
+              itemExtent: 125,
               delegate:
                   SliverChildBuilderDelegate((BuildContext context, int index) {
                 return _listItem(index);
@@ -112,10 +111,7 @@ class _MenuPageState extends State<MenuPage> {
         child: FloatingActionButton.extended(
           label: Text(
             mesicalsub.toString(),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           icon: Icon(
             Icons.add,
@@ -128,7 +124,7 @@ class _MenuPageState extends State<MenuPage> {
               var x1 = pl[pl.length - 1].toMap();
               var x2 = x1['cal'];
               x2 += mesicalsub;
-                //methodchannel
+              //methodchannel
               _channel.invokeMethod('test', x2.toString());
 
               if (x1['date'] ==
@@ -147,7 +143,7 @@ class _MenuPageState extends State<MenuPage> {
                     .save();
               }
             }
-            
+
             Navigator.of(context).pop();
           },
         ),

@@ -14,7 +14,6 @@ import 'graphlayout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:supercharged/supercharged.dart';
 import 'models.dart';
 import 'package:rate_my_app/rate_my_app.dart';
@@ -182,11 +181,9 @@ class Home extends StatelessWidget {
                               )
                             ]),
                       ),
-                      appBar: GradientAppBar(
+                      appBar: AppBar(
                         //透過率の設定１
-                        backgroundColorStart: Color(0xffa18cd1)
-                            .withOpacity(snapshot.data.toDouble()),
-                        backgroundColorEnd: Color(0xfffbc2eb)
+                        backgroundColor: Color(0xffa18cd1)
                             .withOpacity(snapshot.data.toDouble()),
                         title: Text('Caldate'),
                         elevation: 0,

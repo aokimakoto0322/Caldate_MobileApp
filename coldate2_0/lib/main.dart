@@ -7,8 +7,6 @@ import 'package:coldate2_0/file_controller.dart';
 import 'package:coldate2_0/metabo.dart';
 import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_admob/firebase_admob.dart';
-import 'package:flutter/services.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'graphlayout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +15,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:supercharged/supercharged.dart';
 import 'models.dart';
 import 'package:rate_my_app/rate_my_app.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 int todaycal;
 var flag = true;
@@ -26,7 +25,6 @@ void main() async {
   final bool isInitialized = await TodoDbModel().initializeDB();
   if (isInitialized == true) {
     myInterstitial.load();
-    myInterstitial2.load();
     runApp(MyApp());
   }
 }
@@ -45,8 +43,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    FirebaseAdMob.instance
-        .initialize(appId: 'ca-app-pub-8627512781946422/9988986141');
   }
   //--admobの設定
 
@@ -74,9 +70,8 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
       Navigator.of(context)
           .pushReplacement(new MaterialPageRoute(builder: (context) => Home()));
 
-      myBanner
-        ..load()
-        ..show(anchorOffset: 0.0, anchorType: AnchorType.bottom);
+      mybanner.load();
+      final AdWidget adWidget = AdWidget(ad: mybanner);
     } else {
       await pref.setBool('seen', true);
       Navigator.of(context).pushReplacement(
@@ -330,49 +325,20 @@ class Intro extends StatelessWidget {
   }
 }
 
-// 広告ターゲット
-MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  keywords: <String>['flutterio', 'beautiful apps'],
-  contentUrl: 'https://flutter.io',
-  birthday: DateTime.now(),
-  childDirected: false,
-  designedForFamilies: false,
-  gender: MobileAdGender.male, // or female, unknown
-  //testDevices: <String>[], // Android emulators are considered test devices
-);
-
-BannerAd myBanner = BannerAd(
-  // テスト用のIDを使用
-  // リリース時にはIDを置き換える必要あり
-  adUnitId: 'ca-app-pub-8627512781946422/9988986141',
-  size: AdSize.smartBanner,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    // 広告の読み込みが完了
-    print("BannerAd event is $event");
-  },
-);
-InterstitialAd myInterstitial = InterstitialAd(
-  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-  // https://developers.google.com/admob/android/test-ads
-  // https://developers.google.com/admob/ios/test-ads
-  adUnitId: 'ca-app-pub-8627512781946422/9877979233',
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("InterstitialAd event is $event");
-  },
-);
-
-InterstitialAd myInterstitial2 = InterstitialAd(
-  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-  // https://developers.google.com/admob/android/test-ads
-  // https://developers.google.com/admob/ios/test-ads
+final InterstitialAd myInterstitial = InterstitialAd(
   adUnitId: 'ca-app-pub-8627512781946422/4738687830',
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("InterstitialAd event is $event");
-  },
+  request: AdRequest(),
+  listener: AdListener(),
 );
+
+final BannerAd mybanner = BannerAd(
+  adUnitId: "ca-app-pub-8627512781946422/9988986141",
+  size: AdSize.banner,
+  request: AdRequest(),
+  listener: AdListener()
+);
+
+
 
 enum _BgProps { color1, color2 }
 

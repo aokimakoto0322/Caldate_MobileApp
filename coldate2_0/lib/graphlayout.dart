@@ -1,5 +1,4 @@
 import 'package:coldate2_0/Alldate.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -688,10 +687,7 @@ class _GraphState extends State<graphlayout>
                                   shape: StadiumBorder(),
                                   child: Text('過去のデータを見る'),
                                   onPressed: () {
-                                    myInterstitial.show(
-                                        anchorType: AnchorType.bottom,
-                                        anchorOffset: 0.0,
-                                        horizontalCenterOffset: 0.0);
+                                    myInterstitial.show();
                                     Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
                                       return Alldate();

@@ -494,7 +494,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
                                 child: Text('メニュー一覧'),
                                 shape: StadiumBorder(),
                                 onPressed: () {
-                                  myInterstitial2.show();
+                                  myInterstitial.show();
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) {
                                       return MenuPage();

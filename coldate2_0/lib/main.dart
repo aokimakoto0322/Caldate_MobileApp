@@ -71,7 +71,7 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
           .pushReplacement(new MaterialPageRoute(builder: (context) => Home()));
 
       mybanner.load();
-      final AdWidget adWidget = AdWidget(ad: mybanner);
+      
     } else {
       await pref.setBool('seen', true);
       Navigator.of(context).pushReplacement(
@@ -93,8 +93,7 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
 }
 
 class Home extends StatelessWidget {
-
-
+  final AdWidget adWidget = AdWidget(ad: mybanner);
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -213,12 +212,24 @@ class Home extends StatelessWidget {
                           preferredSize: Size.fromHeight(30.0),
                         ),
                       ),
-                      body: TabBarView(
-                        children: <Widget>[
-                          Summary(),
-                          graphlayout(),
-                          Piechart(),
-                          metabo(),
+                      body: Stack(
+                        children: [
+                          TabBarView(
+                            children: <Widget>[
+                              Summary(),
+                              graphlayout(),
+                              Piechart(),
+                              metabo(),
+                            ],
+                          ),
+                           Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              child: adWidget,
+                              width: mybanner.size.width.toDouble(),
+                              height: mybanner.size.height.toDouble(),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -231,6 +242,8 @@ class Home extends StatelessWidget {
       ),
     );
   }
+
+ 
 
   _getOpacity() async {
     SharedPreferences pref = await SharedPreferences.getInstance();

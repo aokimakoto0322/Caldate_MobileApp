@@ -52,7 +52,6 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(bottom: 100),
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
@@ -107,7 +106,6 @@ class _MenuPageState extends State<MenuPage> {
         ),
       ),
       floatingActionButton: Container(
-        margin: EdgeInsets.only(bottom: 110),
         child: FloatingActionButton.extended(
           label: Text(
             mesicalsub.toString(),

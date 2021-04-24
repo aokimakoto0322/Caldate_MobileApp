@@ -1,7 +1,9 @@
+import 'package:coldate2_0/DatabaseHelper.dart';
 import 'package:coldate2_0/main.dart';
 import 'package:coldate2_0/metabo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Animations/FadeAnimations.dart';
@@ -96,6 +98,9 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
+    //DBHelperの設定
+    final dbHelper = DatabaseHelper.instance;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -428,6 +433,9 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
                                       child: Text('今日の摂取カロリーに追加する'),
                                     ),
                                     onPressed: () async {
+                                      //食べたものリストInsert
+                                      _insert(_col.getCol());
+
                                       final pl = await Todo().select().toList();
                                       setState(() {
                                         var x = _col.getCol();
@@ -482,9 +490,9 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
                                             'test', _col.getCol().toString());
 
                                         for (var x in pl) {
-                                          print(x.toMap());
+                                          //print(x.toMap());
                                         }
-                                        print(pl.length);
+                                        //print(pl.length);
                                       });
                                     }))),
                         FadeAnimation(
@@ -516,6 +524,17 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
             }
           }),
     );
+  }
+
+  //食べたものリストのINSERT
+  void _insert(int cal) async {
+    Map<String, dynamic> row = {
+      DatabaseHelper.date: DateFormat('yyyy/MM/dd(E)').format(now),
+      DatabaseHelper.datetime: DateFormat('HH:mm').format(now),
+      DatabaseHelper.menuname: "手入力",
+      DatabaseHelper.menucal: cal
+    };
+    print("INSERT成功");
   }
 
   void buildSetState() {

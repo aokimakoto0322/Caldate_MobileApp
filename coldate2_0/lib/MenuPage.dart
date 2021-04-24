@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:coldate2_0/DatabaseHelper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'Mesi.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
@@ -17,7 +19,10 @@ class _MenuPageState extends State<MenuPage> {
   List<Mesi> _notes = List<Mesi>();
   List<Mesi> _noteForDisplay = List<Mesi>();
   var now = DateTime.now();
+  //一時カロリー保管場所
   var mesicalsub = 0;
+  //pickuplist
+  List<Map<String, dynamic>> mesiarray = [];
 
   var _controller = TextEditingController();
 
@@ -142,6 +147,11 @@ class _MenuPageState extends State<MenuPage> {
               }
             }
 
+            //配列にたまったデータをDBにINSERT
+            mesiarray.forEach((element) {
+              _insert(element["mesiname"], element["mesical"]);
+            });
+
             Navigator.of(context).pop();
           },
         ),
@@ -158,6 +168,11 @@ class _MenuPageState extends State<MenuPage> {
             title: Text(_noteForDisplay[index].mesiname),
             subtitle: Text(_noteForDisplay[index].mesical.toString() + 'kCal'),
             onTap: () {
+              //食べたものとカロリーを一時リストに保管
+              mesiarray.add({
+                "mesiname": _noteForDisplay[index].mesiname,
+                "mesical": _noteForDisplay[index].mesical
+              });
               setState(() {
                 mesicalsub += _noteForDisplay[index].mesical;
               });
@@ -166,5 +181,15 @@ class _MenuPageState extends State<MenuPage> {
         ],
       ),
     );
+  }
+
+  void _insert(String mesiname, int mesical) {
+    Map<String, dynamic> row = {
+      DatabaseHelper.date: DateFormat('yyyy/MM/dd(E)').format(now),
+      DatabaseHelper.datetime: DateFormat('HH:mm').format(now),
+      DatabaseHelper.menuname: mesiname,
+      DatabaseHelper.menucal: mesical
+    };
+    print("insert成功");
   }
 }

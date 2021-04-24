@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:coldate2_0/DatabaseHelper.dart';
 import 'package:coldate2_0/Okotowari.dart';
 import 'package:coldate2_0/Piechart.dart';
 import 'package:coldate2_0/SettingPage.dart';
@@ -34,10 +35,6 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-
-
-  
-
 class _MyAppState extends State<MyApp> {
   //admobの設定
   @override
@@ -45,7 +42,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
   //--admobの設定
-
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +67,6 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
           .pushReplacement(new MaterialPageRoute(builder: (context) => Home()));
 
       mybanner.load();
-      
     } else {
       await pref.setBool('seen', true);
       Navigator.of(context).pushReplacement(
@@ -93,7 +88,9 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
 }
 
 class Home extends StatelessWidget {
+  //bannerの設定
   final AdWidget adWidget = AdWidget(ad: mybanner);
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -166,7 +163,7 @@ class Home extends StatelessWidget {
                                   showAboutDialog(
                                       context: context,
                                       applicationName: "Coldate",
-                                      applicationVersion: '2.0.2',
+                                      applicationVersion: '3.0.0',
                                       applicationLegalese: '2020 Coldate',
                                       applicationIcon: Image.asset(
                                           'assets/images/splashicon.png',
@@ -222,7 +219,7 @@ class Home extends StatelessWidget {
                               metabo(),
                             ],
                           ),
-                           Align(
+                          Align(
                             alignment: Alignment.bottomCenter,
                             child: Container(
                               child: adWidget,
@@ -242,8 +239,6 @@ class Home extends StatelessWidget {
       ),
     );
   }
-
- 
 
   _getOpacity() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -301,16 +296,16 @@ class Intro extends StatelessWidget {
             ),
             decoration: PageDecoration(pageColor: Colors.pink[100])),
         PageViewModel(
-          title: '比較する',
-          body: '基礎代謝に対して、今日どのくらいの割合でカロリーを摂取したか確認することができます。\n\n※この機能を使用するには、基礎代謝を測定する必要があります。測定方法は次ページにあります。',
-          decoration: PageDecoration(pageColor: Colors.yellow[100]),
-          image: Container(
-            margin: EdgeInsets.only(top: 80),
-            child: Center(
-              child: Image.asset('assets/images/introduce6.png'),
-            ),            
-          )
-        ),
+            title: '比較する',
+            body:
+                '基礎代謝に対して、今日どのくらいの割合でカロリーを摂取したか確認することができます。\n\n※この機能を使用するには、基礎代謝を測定する必要があります。測定方法は次ページにあります。',
+            decoration: PageDecoration(pageColor: Colors.yellow[100]),
+            image: Container(
+              margin: EdgeInsets.only(top: 80),
+              child: Center(
+                child: Image.asset('assets/images/introduce6.png'),
+              ),
+            )),
         PageViewModel(
             title: "基礎代謝を測る",
             body:
@@ -345,13 +340,10 @@ final InterstitialAd myInterstitial = InterstitialAd(
 );
 
 final BannerAd mybanner = BannerAd(
-  adUnitId: "ca-app-pub-8627512781946422/9988986141",
-  size: AdSize.banner,
-  request: AdRequest(),
-  listener: AdListener()
-);
-
-
+    adUnitId: "ca-app-pub-8627512781946422/9988986141",
+    size: AdSize.banner,
+    request: AdRequest(),
+    listener: AdListener());
 
 enum _BgProps { color1, color2 }
 

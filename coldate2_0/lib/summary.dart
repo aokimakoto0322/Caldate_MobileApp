@@ -18,6 +18,8 @@ colcounter _col = new colcounter();
 //メソッドチャンネルの設定
 const MethodChannel _channel = const MethodChannel('package/coldate');
 
+
+
 class Summary extends StatefulWidget {
   @override
   _summaryState createState() => _summaryState();
@@ -99,8 +101,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    //DBHelperの設定
-    final dbHelper = DatabaseHelper.instance;
+    
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -526,14 +527,19 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
     );
   }
 
+  //DBHelperの設定
+  final dbHelper = DatabaseHelper.instance;
+
   //食べたものリストのINSERT
   void _insert(int cal) async {
+    Intl.defaultLocale = "ja_JP";
     Map<String, dynamic> row = {
       DatabaseHelper.date: DateFormat('yyyy/MM/dd(E)').format(now),
       DatabaseHelper.datetime: DateFormat('HH:mm').format(now),
       DatabaseHelper.menuname: "手入力",
       DatabaseHelper.menucal: cal
     };
+    await dbHelper.insert(row);
     print("INSERT成功");
   }
 

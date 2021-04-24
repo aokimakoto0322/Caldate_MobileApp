@@ -10,6 +10,9 @@ import 'models.dart';
 
 const MethodChannel _channel = const MethodChannel('package/coldate');
 
+//DBHelperの設定
+final dbHelper = DatabaseHelper.instance;
+
 class MenuPage extends StatefulWidget {
   @override
   _MenuPageState createState() => _MenuPageState();
@@ -183,13 +186,14 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  void _insert(String mesiname, int mesical) {
+  void _insert(String mesiname, int mesical) async {
     Map<String, dynamic> row = {
       DatabaseHelper.date: DateFormat('yyyy/MM/dd(E)').format(now),
       DatabaseHelper.datetime: DateFormat('HH:mm').format(now),
       DatabaseHelper.menuname: mesiname,
       DatabaseHelper.menucal: mesical
     };
+    await dbHelper.insert(row);
     print("insert成功");
   }
 }

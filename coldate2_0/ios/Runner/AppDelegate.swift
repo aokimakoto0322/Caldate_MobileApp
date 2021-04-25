@@ -3,6 +3,7 @@ import Flutter
 import GoogleMobileAds
 import AdSupport
 import AppTrackingTransparency
+import Firebase
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {

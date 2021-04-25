@@ -47,6 +47,7 @@ dependencies:
   image_picker: ^0.6.7+3
   path_provider: ^1.6.11
   rate_my_app: ^0.7.2
+  provider: ^5.0.0
 
 
 

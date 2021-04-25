@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:coldate2_0/DatabaseHelper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
 import 'Mesi.dart';
 import 'package:http/http.dart' as http;
@@ -126,6 +127,12 @@ class _MenuPageState extends State<MenuPage> {
           onPressed: () async {
             final pl = await Todo().select().toList();
             if (pl.length == 0) {
+              Todo(
+                      cal: mesicalsub,
+                      date: now.month.toString() + '/' + now.day.toString(),
+                      year: now.year.toString())
+                  .save();
+              
             } else {
               var x1 = pl[pl.length - 1].toMap();
               var x2 = x1['cal'];
@@ -188,7 +195,7 @@ class _MenuPageState extends State<MenuPage> {
 
   void _insert(String mesiname, int mesical) async {
     Map<String, dynamic> row = {
-      DatabaseHelper.date: DateFormat('yyyy/MM/dd(E)').format(now),
+      DatabaseHelper.date: DateFormat('yyyy-MM-dd').format(now),
       DatabaseHelper.datetime: DateFormat('HH:mm').format(now),
       DatabaseHelper.menuname: mesiname,
       DatabaseHelper.menucal: mesical

@@ -10,6 +10,7 @@ import AppTrackingTransparency
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    FirebaseApp.configure() 
     if #available(iOS 14, *) {
           ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
               GADMobileAds.sharedInstance().start(completionHandler: nil)

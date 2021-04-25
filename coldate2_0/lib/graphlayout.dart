@@ -1,4 +1,5 @@
 import 'package:coldate2_0/Alldate.dart';
+import 'package:coldate2_0/Mainmenutab.dart';
 import 'package:coldate2_0/Oldmenulist.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -691,7 +692,7 @@ class _GraphState extends State<graphlayout>
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                Oldmenulist()));
+                                                Mainmenutab()));
                                   },
                                 ),
                               ),

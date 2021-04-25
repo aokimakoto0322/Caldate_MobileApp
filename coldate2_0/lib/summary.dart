@@ -435,7 +435,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
                                     ),
                                     onPressed: () async {
                                       //食べたものリストInsert
-                                      _insert(_col.getCol());
+                                      _insert(sub);
 
                                       final pl = await Todo().select().toList();
                                       setState(() {
@@ -532,9 +532,8 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin {
 
   //食べたものリストのINSERT
   void _insert(int cal) async {
-    Intl.defaultLocale = "ja_JP";
     Map<String, dynamic> row = {
-      DatabaseHelper.date: DateFormat('yyyy/MM/dd(E)').format(now),
+      DatabaseHelper.date: DateFormat('yyyy-MM-dd').format(now),
       DatabaseHelper.datetime: DateFormat('HH:mm').format(now),
       DatabaseHelper.menuname: "手入力",
       DatabaseHelper.menucal: cal

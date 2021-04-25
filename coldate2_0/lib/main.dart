@@ -18,6 +18,7 @@ import 'models.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+
 int todaycal;
 var flag = true;
 var arrow = 0;
@@ -26,6 +27,7 @@ void main() async {
   final bool isInitialized = await TodoDbModel().initializeDB();
   if (isInitialized == true) {
     myInterstitial.load();
+    mybanner.load();
     runApp(MyApp());
   }
 }
@@ -93,6 +95,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     final Size size = MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,

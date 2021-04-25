@@ -170,25 +170,20 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   _listItem(index) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ListTile(
-            title: Text(_noteForDisplay[index].mesiname),
-            subtitle: Text(_noteForDisplay[index].mesical.toString() + 'kCal'),
-            onTap: () {
-              //食べたものとカロリーを一時リストに保管
-              mesiarray.add({
-                "mesiname": _noteForDisplay[index].mesiname,
-                "mesical": _noteForDisplay[index].mesical
-              });
-              setState(() {
-                mesicalsub += _noteForDisplay[index].mesical;
-              });
-            },
-          ),
-        ],
+    return Center(
+      child: ListTile(
+        title: Text(_noteForDisplay[index].mesiname),
+        trailing: Text(_noteForDisplay[index].mesical.toString() + 'kCal'),
+        onTap: () {
+          //食べたものとカロリーを一時リストに保管
+          mesiarray.add({
+            "mesiname": _noteForDisplay[index].mesiname,
+            "mesical": _noteForDisplay[index].mesical
+          });
+          setState(() {
+            mesicalsub += _noteForDisplay[index].mesical;
+          });
+        },
       ),
     );
   }

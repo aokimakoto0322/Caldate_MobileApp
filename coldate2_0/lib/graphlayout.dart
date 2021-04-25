@@ -3,6 +3,7 @@ import 'package:coldate2_0/Mainmenutab.dart';
 import 'package:coldate2_0/Oldmenulist.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Animations/FadeAnimations.dart';
 import 'models.dart';
@@ -26,6 +27,7 @@ class _GraphState extends State<graphlayout>
   @override
   void initState() {
     super.initState();
+    myInterstitial2.load();
   }
 
   @override
@@ -41,6 +43,13 @@ class _GraphState extends State<graphlayout>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
+    final InterstitialAd myInterstitial2 = InterstitialAd(
+      adUnitId: 'ca-app-pub-8627512781946422/2312420457',
+      request: AdRequest(),
+      listener: AdListener(),
+    );
+
     return FutureBuilder(
         future: _getOpacity(),
         builder: (context, snapshot) {
@@ -688,6 +697,7 @@ class _GraphState extends State<graphlayout>
                                 child: ElevatedButton(
                                   child: Text("食べたものを確認する"),
                                   onPressed: () {
+                                    myInterstitial2.show();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

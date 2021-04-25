@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:coldate2_0/DatabaseHelper.dart';
+import 'package:coldate2_0/Mainmenutab.dart';
 import 'package:coldate2_0/Okotowari.dart';
+import 'package:coldate2_0/Oldmenulist.dart';
 import 'package:coldate2_0/Piechart.dart';
 import 'package:coldate2_0/SettingPage.dart';
 import 'package:coldate2_0/file_controller.dart';
@@ -26,6 +28,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final bool isInitialized = await TodoDbModel().initializeDB();
   if (isInitialized == true) {
+    myInterstitial2.load();
     myInterstitial.load();
     mybanner.load();
     runApp(MyApp());
@@ -132,48 +135,58 @@ class Home extends StatelessWidget {
                     child: Scaffold(
                       backgroundColor: Colors.transparent,
                       drawer: Drawer(
-                        child: ListView(
-                            padding: EdgeInsets.zero,
-                            children: <Widget>[
-                              DrawerHeader(
-                                child: Text(
-                                  'Caldate\nSettingMenu',
-                                  style: TextStyle(fontSize: 20),
+                        child: Container(
+                          color: Colors.transparent.withOpacity(0.2),
+                          child: ListView(
+                              padding: EdgeInsets.zero,
+                              children: <Widget>[
+                                DrawerHeader(
+                                  child: Text(
+                                    'Caldate\nMenu',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(colors: <Color>[
+                                    const Color(0xffa18cd1),
+                                    const Color(0xfffbc2eb)
+                                  ])),
                                 ),
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(colors: <Color>[
-                                  const Color(0xffa18cd1),
-                                  const Color(0xfffbc2eb)
-                                ])),
-                              ),
-                              ListTile(
-                                title: Text('設定'),
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Settingpage()));
-                                },
-                              ),
-                              ListTile(
-                                title: Text('アプリについて'),
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Okotowari()));
-                                },
-                              ),
-                              ListTile(
-                                title: Text('情報'),
-                                onTap: () {
-                                  showAboutDialog(
-                                      context: context,
-                                      applicationName: "Coldate",
-                                      applicationVersion: '3.0.0',
-                                      applicationLegalese: '2020 Coldate',
-                                      applicationIcon: Image.asset(
-                                          'assets/images/splashicon.png',
-                                          height: 50));
-                                },
-                              )
-                            ]),
+                                ListTile(
+                                  title: Text("過去食べたものを見る"),
+                                  onTap: () {
+                                    myInterstitial2.show();
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Mainmenutab()));
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text('設定'),
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => Settingpage()));
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text('アプリについて'),
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => Okotowari()));
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text('情報'),
+                                  onTap: () {
+                                    showAboutDialog(
+                                        context: context,
+                                        applicationName: "Coldate",
+                                        applicationVersion: '3.0.0',
+                                        applicationLegalese: '2020 Coldate',
+                                        applicationIcon: Image.asset(
+                                            'assets/images/splashicon.png',
+                                            height: 50));
+                                  },
+                                )
+                              ]),
+                        ),
                       ),
                       appBar: AppBar(
                         //透過率の設定１
@@ -259,6 +272,16 @@ class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IntroductionScreen(
+      dotsDecorator: DotsDecorator(
+        size: const Size.square(10.0),
+        activeSize: const Size(20.0, 10.0),
+        activeColor: Color(0xffa18cd1),
+        color: Colors.black26,
+        spacing: const EdgeInsets.symmetric(horizontal: 3.0),
+        activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.0)
+        )
+      ),
       key: introKey,
       showNextButton: true,
       next: const Icon(Icons.arrow_forward),
@@ -335,6 +358,12 @@ class Intro extends StatelessWidget {
     );
   }
 }
+
+final InterstitialAd myInterstitial2 = InterstitialAd(
+  adUnitId: 'ca-app-pub-8627512781946422/2312420457',
+  request: AdRequest(),
+  listener: AdListener(),
+);
 
 final InterstitialAd myInterstitial = InterstitialAd(
   adUnitId: 'ca-app-pub-8627512781946422/4738687830',

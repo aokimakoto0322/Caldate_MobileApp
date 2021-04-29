@@ -79,7 +79,7 @@ class _SettingpageState extends State<Settingpage> {
                         style: TextStyle(fontSize: 18),
                       ),
                       subtitle:
-                          Text('最初に開いたときの画面背景を設定します。\n画像は端末に沿って拡大されて表示されます。'),
+                          Text('最初に開いたときの画面背景を設定します。\n画像は端末に沿って拡大されて表示されます。\n※画像はアプリを再起動した際に反映されます。'),
                     ),
                     FutureBuilder(
                       future: FileController.loadLocalImage(),
@@ -167,62 +167,6 @@ class _SettingpageState extends State<Settingpage> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           _events.add(snapshot.data.toDouble());
-                          return Text('');
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                    )
-                  ],
-                ),
-              ),
-              Card(
-                child: Column(
-                  children: <Widget>[
-                    const ListTile(
-                      title: Text(
-                        '背景画像のブラー',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      subtitle: Text(
-                          '設定した背景にぼかし（ブラー）をかけます。\nぼかしをかけることによって表示されている文字やボタンが見やすくなります。'),
-                    ),
-                    StreamBuilder(
-                      stream: _blur.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            children: <Widget>[
-                              Text(
-                                '現在設定中のブラー：' + snapshot.data.toInt().toString(),
-                                style: TextStyle(
-                                  fontSize: 16
-                                ),
-                              ),
-                              Slider(
-                                min: 0,
-                                max: 15,
-                                divisions: 15,
-                                value: snapshot.data,
-                                onChanged: (value) {
-                                  _blur.add(value);
-                                },
-                                onChangeEnd: (value) {
-                                  _setBlur(value);
-                                },
-                              )
-                            ],
-                          );
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                    ),
-                    FutureBuilder(
-                      future: _getBlur(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          _blur.add(snapshot.data.toDouble());
                           return Text('');
                         } else {
                           return CircularProgressIndicator();

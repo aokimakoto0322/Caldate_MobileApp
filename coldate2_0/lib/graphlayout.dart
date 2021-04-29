@@ -1,6 +1,9 @@
 import 'package:coldate2_0/Alldate.dart';
+import 'package:coldate2_0/Mainmenutab.dart';
+import 'package:coldate2_0/Oldmenulist.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Animations/FadeAnimations.dart';
 import 'models.dart';
@@ -24,6 +27,7 @@ class _GraphState extends State<graphlayout>
   @override
   void initState() {
     super.initState();
+    myInterstitial2.load();
   }
 
   @override
@@ -39,6 +43,13 @@ class _GraphState extends State<graphlayout>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
+    final InterstitialAd myInterstitial2 = InterstitialAd(
+      adUnitId: 'ca-app-pub-8627512781946422/2312420457',
+      request: AdRequest(),
+      listener: AdListener(),
+    );
+
     return FutureBuilder(
         future: _getOpacity(),
         builder: (context, snapshot) {
@@ -678,214 +689,280 @@ class _GraphState extends State<graphlayout>
                     ),
                     FadeAnimation(
                         0.5,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
+                        Column(
+                          children: [
                             Container(
+                              margin: EdgeInsets.all(15),
                               child: Center(
-                                child: RaisedButton(
-                                  shape: StadiumBorder(),
-                                  child: Text('過去のデータを見る'),
+                                child: ElevatedButton(
+                                  child: Text("食べたものを確認する"),
                                   onPressed: () {
-                                    myInterstitial.show();
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) {
-                                      return Alldate();
-                                    }));
+                                    myInterstitial2.show();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Mainmenutab()));
                                   },
                                 ),
                               ),
                             ),
-                            Container(
-                              child: RaisedButton(
-                                child: Text('データを修正する'),
-                                shape: StadiumBorder(),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return Scaffold(
-                                        backgroundColor: Colors.transparent,
-                                        body: StatefulBuilder(
-                                          builder: (context, setState) {
-                                            return SingleChildScrollView(
-                                              child: Column(
-                                                children: <Widget>[
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Container(
-                                                    height: 50,
-                                                    child: FlatButton(
-                                                      child: Icon(
-                                                        Icons.clear,
-                                                        color: Colors.white,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(
+                                  child: Center(
+                                    child: ElevatedButton(
+                                      child: Text('過去データをグラフで見る'),
+                                      onPressed: () {
+                                        myInterstitial.show();
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return Alldate();
+                                        }));
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: ElevatedButton(
+                                    child: Text('データ修正'),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Scaffold(
+                                            backgroundColor: Colors.transparent,
+                                            body: StatefulBuilder(
+                                              builder: (context, setState) {
+                                                return SingleChildScrollView(
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      SizedBox(
+                                                        height: 10,
                                                       ),
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 100,
-                                                  ),
-                                                  Text(
-                                                    '変更する日時',
-                                                    style: TextStyle(
-                                                        fontSize: 40,
-                                                        color: Colors.white,
-                                                        decoration:
-                                                            TextDecoration.none,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  FlatButton.icon(
-                                                    icon: Icon(
-                                                      Icons.calendar_today,
-                                                      color: Colors.white,
-                                                    ),
-                                                    label: Text(
-                                                      _changedDate.year
-                                                              .toString() +
-                                                          '年' +
-                                                          _changedDate.month
-                                                              .toString() +
-                                                          '月' +
-                                                          _changedDate.day
-                                                              .toString() +
-                                                          '日',
-                                                      style: TextStyle(
+                                                      Container(
+                                                        height: 50,
+                                                        child: FlatButton(
+                                                          child: Icon(
+                                                            Icons.clear,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 100,
+                                                      ),
+                                                      Text(
+                                                        '変更する日時',
+                                                        style: TextStyle(
+                                                            fontSize: 40,
+                                                            color: Colors.white,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      FlatButton.icon(
+                                                        icon: Icon(
+                                                          Icons.calendar_today,
                                                           color: Colors.white,
-                                                          fontSize: 30),
-                                                    ),
-                                                    onPressed: () async {
-                                                      final DateTime picked =
-                                                          await showDatePicker(
-                                                              context: context,
-                                                              initialDate:
-                                                                  _changedDate,
-                                                              firstDate:
-                                                                  DateTime(
-                                                                      2020),
-                                                              lastDate: DateTime
-                                                                      .now()
-                                                                  .add(Duration(
-                                                                      days:
-                                                                          360)));
-                                                      if (picked != null) {
-                                                        setState(() {
-                                                          _changedDate = picked;
-                                                        });
-                                                      }
-                                                    },
-                                                  ),
-                                                  SizedBox(
-                                                    height: 100,
-                                                  ),
-                                                  Text(
-                                                    '変更するカロリー',
-                                                    style: TextStyle(
-                                                        fontSize: 35,
-                                                        color: Colors.white,
-                                                        decoration:
-                                                            TextDecoration.none,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 100, right: 100),
-                                                    child: TextField(
-                                                      onSubmitted: (value) async{
-                                                        var p1 = await Todo().select().date.contains(_changedDate.month.toString() + '/' + _changedDate.day.toString()).toList();
-                                                        print(_changedDate.month.toString() + '/' + _changedDate.day.toString());
-                                                        try{
-                                                          var x1 = p1[p1.length - 1].toMap();
-                                                          var getid = x1['id'];
-                                                          int cal = int.parse(_changeController.text);
-                                                          Todo(id: getid, cal: cal).save();
-                                                          Navigator.of(context).pop();
-                                                        }catch(e){
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return AlertDialog(
-                                                                shape: const RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.all(Radius.circular(10))
-                                                                ),
-                                                                backgroundColor: Color(0xffa18cd1).withOpacity(0.85),
-                                                                title: Text(
-                                                                  '項目にエラーがあります',
-                                                                  style: TextStyle(
-                                                                    color: Colors.white,
-                                                                    fontWeight: FontWeight.bold
-                                                                  ),
-                                                                ),
-                                                                content: Column(
-                                                                  mainAxisSize: MainAxisSize.min,
-                                                                  children: <Widget>[
-                                                                    
-                                                                    SizedBox(
-                                                                      height: 10,
-                                                                    ),
-                                                                    Text(
-                                                                      '・保存されていない日にちのカロリーは変更できません',
-                                                                      style: TextStyle(
-                                                                        color: Colors.white,
-                                                                        fontSize: 16
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: 5,
-                                                                    ),
-                                                                    Text(
-                                                                      '・変更するカロリーには数字以外は入力できません',
-                                                                      style: TextStyle(
-                                                                        color: Colors.white,
-                                                                        fontSize: 16
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                )
-                                                              );
-                                                            },
-                                                          );
-                                                        }
-                                                      },
-                                                      controller: _changeController,
-                                                      decoration: InputDecoration(
-                                                          hintText: '1234',
-                                                          labelStyle: TextStyle(
+                                                        ),
+                                                        label: Text(
+                                                          _changedDate.year
+                                                                  .toString() +
+                                                              '年' +
+                                                              _changedDate.month
+                                                                  .toString() +
+                                                              '月' +
+                                                              _changedDate.day
+                                                                  .toString() +
+                                                              '日',
+                                                          style: TextStyle(
                                                               color:
-                                                                  Colors.white
-                                                                ),
-                                                          border: UnderlineInputBorder(
-                                                              borderSide: BorderSide(
+                                                                  Colors.white,
+                                                              fontSize: 30),
+                                                        ),
+                                                        onPressed: () async {
+                                                          final DateTime
+                                                              picked =
+                                                              await showDatePicker(
+                                                                  context:
+                                                                      context,
+                                                                  initialDate:
+                                                                      _changedDate,
+                                                                  firstDate:
+                                                                      DateTime(
+                                                                          2020),
+                                                                  lastDate: DateTime
+                                                                          .now()
+                                                                      .add(Duration(
+                                                                          days:
+                                                                              360)));
+                                                          if (picked != null) {
+                                                            setState(() {
+                                                              _changedDate =
+                                                                  picked;
+                                                            });
+                                                          }
+                                                        },
+                                                      ),
+                                                      SizedBox(
+                                                        height: 100,
+                                                      ),
+                                                      Text(
+                                                        '変更するカロリー',
+                                                        style: TextStyle(
+                                                            fontSize: 35,
+                                                            color: Colors.white,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: 100,
+                                                            right: 100),
+                                                        child: TextField(
+                                                          onSubmitted:
+                                                              (value) async {
+                                                            var p1 = await Todo()
+                                                                .select()
+                                                                .date
+                                                                .contains(_changedDate
+                                                                        .month
+                                                                        .toString() +
+                                                                    '/' +
+                                                                    _changedDate
+                                                                        .day
+                                                                        .toString())
+                                                                .toList();
+                                                            print(_changedDate
+                                                                    .month
+                                                                    .toString() +
+                                                                '/' +
+                                                                _changedDate.day
+                                                                    .toString());
+                                                            try {
+                                                              var x1 =
+                                                                  p1[p1.length -
+                                                                          1]
+                                                                      .toMap();
+                                                              var getid =
+                                                                  x1['id'];
+                                                              int cal = int.parse(
+                                                                  _changeController
+                                                                      .text);
+                                                              Todo(
+                                                                      id: getid,
+                                                                      cal: cal)
+                                                                  .save();
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            } catch (e) {
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return AlertDialog(
+                                                                      shape: const RoundedRectangleBorder(
+                                                                          borderRadius: BorderRadius.all(Radius.circular(
+                                                                              10))),
+                                                                      backgroundColor: Color(
+                                                                              0xffa18cd1)
+                                                                          .withOpacity(
+                                                                              0.85),
+                                                                      title:
+                                                                          Text(
+                                                                        '項目にエラーがあります',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                      content:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.min,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          SizedBox(
+                                                                            height:
+                                                                                10,
+                                                                          ),
+                                                                          Text(
+                                                                            '・保存されていない日にちのカロリーは変更できません',
+                                                                            style:
+                                                                                TextStyle(color: Colors.white, fontSize: 16),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                5,
+                                                                          ),
+                                                                          Text(
+                                                                            '・変更するカロリーには数字以外は入力できません',
+                                                                            style:
+                                                                                TextStyle(color: Colors.white, fontSize: 16),
+                                                                          )
+                                                                        ],
+                                                                      ));
+                                                                },
+                                                              );
+                                                            }
+                                                          },
+                                                          controller:
+                                                              _changeController,
+                                                          decoration: InputDecoration(
+                                                              hintText: '1234',
+                                                              labelStyle: TextStyle(
                                                                   color: Colors
-                                                                      .white))),
-                                                      maxLength: 5,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 40),
-                                                      keyboardType: TextInputType.number,
-                                                      textAlign: TextAlign.center,
-                                                    ),
+                                                                      .white),
+                                                              border: UnderlineInputBorder(
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                          color:
+                                                                              Colors.white))),
+                                                          maxLength: 5,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 40),
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
-                                  );
-                                },
-                              ),
-                            )
+                                  ),
+                                )
+                              ],
+                            ),
                           ],
                         )),
                     SizedBox(

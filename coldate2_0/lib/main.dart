@@ -11,6 +11,7 @@ import 'package:coldate2_0/metabo.dart';
 import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'MenuPage.dart';
 import 'graphlayout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
@@ -110,7 +111,7 @@ class Home extends StatelessWidget {
         children: <Widget>[
           const Backgroundsetting(),
           //モーションブラー
-          FutureBuilder(
+          /* FutureBuilder(
               future: _getBlur(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -125,7 +126,7 @@ class Home extends StatelessWidget {
                 } else {
                   return CircularProgressIndicator();
                 }
-              }),
+              }), */
           FutureBuilder(
               future: _getOpacity(),
               builder: (context, snapshot) {
@@ -155,7 +156,15 @@ class Home extends StatelessWidget {
                                   title: Text("過去食べたものを見る"),
                                   onTap: () {
                                     myInterstitial2.show();
+                                    //pushWithReload(context);
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Mainmenutab()));
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text("メニュー一覧"),
+                                  onTap: () {
+                                    myInterstitial.show();
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
                                   },
                                 ),
                                 ListTile(

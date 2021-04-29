@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'Mesi.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 
 import 'models.dart';
 
@@ -170,21 +171,19 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   _listItem(index) {
-    return Center(
-      child: ListTile(
-        title: Text(_noteForDisplay[index].mesiname),
-        trailing: Text(_noteForDisplay[index].mesical.toString() + 'kCal'),
-        onTap: () {
-          //食べたものとカロリーを一時リストに保管
-          mesiarray.add({
-            "mesiname": _noteForDisplay[index].mesiname,
-            "mesical": _noteForDisplay[index].mesical
-          });
-          setState(() {
-            mesicalsub += _noteForDisplay[index].mesical;
-          });
-        },
-      ),
+    return ListTile(
+      title: Text(_noteForDisplay[index].mesiname),
+      trailing: Text(_noteForDisplay[index].mesical.toString() + 'kCal'),
+      onTap: () {
+        //食べたものとカロリーを一時リストに保管
+        mesiarray.add({
+          "mesiname": _noteForDisplay[index].mesiname,
+          "mesical": _noteForDisplay[index].mesical
+        });
+        setState(() {
+          mesicalsub += _noteForDisplay[index].mesical;
+        });
+      },
     );
   }
 
@@ -193,7 +192,7 @@ class _MenuPageState extends State<MenuPage> {
       DatabaseHelper.date: DateFormat('yyyy-MM-dd').format(now),
       DatabaseHelper.datetime: DateFormat('HH:mm').format(now),
       DatabaseHelper.menuname: mesiname,
-      DatabaseHelper.menucal: mesical
+      DatabaseHelper.menucal: mesical,
     };
     await dbHelper.insert(row);
     print("insert成功");

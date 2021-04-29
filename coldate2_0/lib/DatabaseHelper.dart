@@ -70,4 +70,17 @@ class DatabaseHelper {
     int id = row[uniqid];
     return await db.update(table, row, where: '$uniqid = ?', whereArgs: [id]);
   }
+
+  Future<void> updateMenu(int id, String menu, int cal) async{
+    var values = <String, dynamic>{
+      "menuname" : menu,
+      "menucal" : cal
+    };
+    Database db = await instance.database;
+    db.update(
+      table,
+      values,
+      where: "_id = $id"
+    );
+  }
 }

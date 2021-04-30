@@ -155,7 +155,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                         Container(
                                           margin: EdgeInsets.only(top: 30),
                                           child: Icon(
-                                            Icons.list
+                                            Icons.calendar_today_outlined
                                           )
                                         )
                                       ],

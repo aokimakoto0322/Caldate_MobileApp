@@ -137,7 +137,6 @@ class Home extends StatelessWidget {
                       backgroundColor: Colors.transparent,
                       drawer: Drawer(
                         child: Container(
-                          color: Colors.transparent.withOpacity(0.2),
                           child: ListView(
                               padding: EdgeInsets.zero,
                               children: <Widget>[

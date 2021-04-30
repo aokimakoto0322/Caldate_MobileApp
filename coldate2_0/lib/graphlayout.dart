@@ -840,17 +840,7 @@ class _GraphState extends State<graphlayout>
                                                         child: TextField(
                                                           onSubmitted:
                                                               (value) async {
-                                                            var p1 = await Todo()
-                                                                .select()
-                                                                .date
-                                                                .contains(_changedDate
-                                                                        .month
-                                                                        .toString() +
-                                                                    '/' +
-                                                                    _changedDate
-                                                                        .day
-                                                                        .toString())
-                                                                .toList();
+                                                            var p1 = await Todo().select().date.contains(_changedDate.month.toString() +'/' + _changedDate.day.toString()).toList();
                                                             print(_changedDate
                                                                     .month
                                                                     .toString() +
@@ -858,12 +848,8 @@ class _GraphState extends State<graphlayout>
                                                                 _changedDate.day
                                                                     .toString());
                                                             try {
-                                                              var x1 =
-                                                                  p1[p1.length -
-                                                                          1]
-                                                                      .toMap();
-                                                              var getid =
-                                                                  x1['id'];
+                                                              var x1 = p1[p1.length - 1].toMap();
+                                                              var getid = x1['id'];
                                                               int cal = int.parse(
                                                                   _changeController
                                                                       .text);

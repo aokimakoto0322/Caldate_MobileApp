@@ -12,6 +12,7 @@ import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'MenuPage.dart';
+import 'RewardView.dart';
 import 'graphlayout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
@@ -150,6 +151,12 @@ class Home extends StatelessWidget {
                                     const Color(0xffa18cd1),
                                     const Color(0xfffbc2eb)
                                   ])),
+                                ),
+                                ListTile(
+                                  title: Text("広告を消す"),
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RewardView()));
+                                  },
                                 ),
                                 ListTile(
                                   title: Text("過去食べたものを見る"),

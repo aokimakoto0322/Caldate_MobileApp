@@ -5,6 +5,7 @@ import 'package:coldate2_0/main.dart';
 import 'package:coldate2_0/models.dart';
 import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'Groval.dart';
@@ -251,6 +252,7 @@ class _OldmenulistState extends State<Oldmenulist> {
                                                                     children: [
                                                                       TextFormField(
                                                                         controller: menuController,
+                                                                        maxLength: 50,
                                                                         decoration: const InputDecoration(
                                                                           border: OutlineInputBorder(),
                                                                           labelText: "メニュー名"
@@ -259,6 +261,8 @@ class _OldmenulistState extends State<Oldmenulist> {
                                                                       TextFormField(
                                                                         controller: calController,
                                                                         keyboardType: TextInputType.number,
+                                                                        maxLength: 4,
+                                                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                                                         decoration: const InputDecoration(
                                                                           border: OutlineInputBorder(),
                                                                           labelText: "カロリー"
@@ -490,6 +494,7 @@ class _OldmenulistState extends State<Oldmenulist> {
                                                                     children: [
                                                                       TextFormField(
                                                                         controller: menuController,
+                                                                        maxLength: 50,
                                                                         decoration: const InputDecoration(
                                                                           border: OutlineInputBorder(),
                                                                           labelText: "メニュー名"
@@ -498,6 +503,8 @@ class _OldmenulistState extends State<Oldmenulist> {
                                                                       TextFormField(
                                                                         controller: calController,
                                                                         keyboardType: TextInputType.number,
+                                                                        maxLength: 4,
+                                                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                                                         decoration: const InputDecoration(
                                                                           border: OutlineInputBorder(),
                                                                           labelText: "カロリー"
@@ -707,6 +714,7 @@ class _OldmenulistState extends State<Oldmenulist> {
                                                                     children: [
                                                                       TextFormField(
                                                                         controller: menuController,
+                                                                        maxLength: 50,
                                                                         decoration: const InputDecoration(
                                                                           border: OutlineInputBorder(),
                                                                           labelText: "メニュー名"
@@ -715,6 +723,8 @@ class _OldmenulistState extends State<Oldmenulist> {
                                                                       TextFormField(
                                                                         controller: calController,
                                                                         keyboardType: TextInputType.number,
+                                                                        maxLength: 4,
+                                                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                                                         decoration: const InputDecoration(
                                                                           border: OutlineInputBorder(),
                                                                           labelText: "カロリー"

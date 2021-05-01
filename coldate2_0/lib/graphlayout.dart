@@ -68,7 +68,7 @@ class _GraphState extends State<graphlayout>
                       child: FadeAnimation(
                           0.5,
                           Container(
-                            margin: EdgeInsets.only(top: 10, left: 10),
+                            margin: EdgeInsets.only(top: 10, left: 5),
                             height: 500,
                             child: FutureBuilder(
                               future: Todo().select().toList(),
@@ -503,7 +503,7 @@ class _GraphState extends State<graphlayout>
                                             show: true,
                                             bottomTitles: SideTitles(
                                                 showTitles: true,
-                                                margin: 20,
+                                                margin: 10,
                                                 textStyle: TextStyle(
                                                     color: Color(0xffa18cd1),
                                                     fontWeight:
@@ -665,7 +665,7 @@ class _GraphState extends State<graphlayout>
                                               textStyle: TextStyle(
                                                   color: Color(0xffa18cd1),
                                                   fontWeight: FontWeight.w400,
-                                                  fontSize: 12),
+                                                  fontSize: 10),
                                               getTitles: (double value) {
                                                 return value.toInt().toString();
                                               },

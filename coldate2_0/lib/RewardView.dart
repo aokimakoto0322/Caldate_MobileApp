@@ -211,6 +211,6 @@ class _RewardViewState extends State<RewardView> {
   Future<String> getRewardtime() async{
     //リワードに設定された時間の取得
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("REWARD_DAY") == null ? "" : prefs.getString("REWARD_DAY");
+    return prefs.getString("REWARD_DAY") == null ? "1900-99-99 23:59" : prefs.getString("REWARD_DAY");
   }
 }

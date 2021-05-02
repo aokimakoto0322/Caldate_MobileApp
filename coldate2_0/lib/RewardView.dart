@@ -43,6 +43,7 @@ class _RewardViewState extends State<RewardView> {
             )
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
                 margin: EdgeInsets.only(top: 100, left: 40, right: 40),
@@ -57,56 +58,90 @@ class _RewardViewState extends State<RewardView> {
               ),
               Column(
                 children: [
-                  Card(
-                    elevation: 20,
-                    shadowColor: Colors.black12,
-                    color: Colors.blue[100],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    margin: EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Center(
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: Text(
-                              "リワード広告をみることによって、24時間広告無しでアプリを使用することができます。",
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            )
-                          ),
+                  Column(
+                    children: [
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          child: Text(
+                            "リワード広告をみることによって、24時間広告無しでアプリを使用することができます。",
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          )
                         ),
-                        Center(
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: Text("広告が出なくなる期間は、リワード広告を見てから24時間適用されます。"),
-                          ),
+                      ),
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          child: Text("広告が出なくなる期間は、リワード広告を見てから24時間適用されます。"),
                         ),
-                        Center(
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: Text("リワード期間は、さらにリワードを得ることはできません。"),
-                          ),
+                      ),
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          child: Text("リワード期間は、さらにリワードを得ることはできません。"),
                         ),
-                        Center(
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: Text("本機能はベータ版ですので、プレミアム期間中でも広告が流れる場合がございます。"),
-                          ),
+                      ),
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          child: Text("本機能はベータ版ですので、プレミアム期間中でも広告が流れる場合がございます。"),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  FutureBuilder(
-                    future: getRewardtime(),
-                    builder: (context, snapshot) {
-                      if(snapshot.hasData){
-                        if(now.isAfter(dateformatter.parse(snapshot.data))){
-                          print("今日よりどうがえつらんが後");
-                          print(dateformatter.parse(snapshot.data));
+                  Container(
+                    child: FutureBuilder(
+                      future: getRewardtime(),
+                      builder: (context, snapshot) {
+                        if(snapshot.hasData){
+                          if(now.isAfter(dateformatter.parse(snapshot.data))){
+                            print("今日よりどうがえつらんが後");
+                            print(dateformatter.parse(snapshot.data));
+                            return Center(
+                              child: ElevatedButton(
+                                child: Text(
+                                  "リワードをみる",
+                                  style: TextStyle(
+                                    fontSize: 24
+                                  ),
+                                ),
+                                onPressed: () async{
+                                  myRewarded.show();
+                                },
+                              ),
+                            );
+                          }else{
+                            print("今日よりどうがえつらんが前");
+                            print(dateformatter.parse(snapshot.data));
+                            return Center(
+                              child: ElevatedButton(
+                                child: Text(
+                                  "リワードをみる",
+                                  style: TextStyle(
+                                    fontSize: 24
+                                  ),
+                                ),
+                                onPressed: () async{
+                                  //snackbar
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text("現在プレミアム期間中です。"),
+                                      duration: const Duration(seconds: 5),
+                                      action: SnackBarAction(
+                                        label: "OK",
+                                        onPressed: () {
+                                          
+                                        },
+                                      ),
+                                    )
+                                  );
+                                },
+                              ),
+                            );
+                          }
+                        }else{
                           return Center(
                             child: ElevatedButton(
                               child: Text(
@@ -120,53 +155,9 @@ class _RewardViewState extends State<RewardView> {
                               },
                             ),
                           );
-                        }else{
-                          print("今日よりどうがえつらんが前");
-                          print(dateformatter.parse(snapshot.data));
-                          return Center(
-                            child: ElevatedButton(
-                              child: Text(
-                                "リワードをみる",
-                                style: TextStyle(
-                                  fontSize: 24
-                                ),
-                              ),
-                              onPressed: () async{
-                                //snackbar
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text("現在プレミアム期間中です。"),
-                                    duration: const Duration(seconds: 5),
-                                    action: SnackBarAction(
-                                      label: "OK",
-                                      onPressed: () {
-                                        
-                                      },
-                                    ),
-                                  )
-                                );
-                              },
-                            ),
-                          );
                         }
-
-                        
-                      }else{
-                        return Center(
-                          child: ElevatedButton(
-                            child: Text(
-                              "リワードをみる",
-                              style: TextStyle(
-                                fontSize: 24
-                              ),
-                            ),
-                            onPressed: () async{
-                              myRewarded.show();
-                            },
-                          ),
-                        );
-                      }
-                    },
+                      },
+                    ),
                   ),
                 ],
               ),

@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'Mesi.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
-import 'package:uuid/uuid.dart';
 
 import 'models.dart';
 

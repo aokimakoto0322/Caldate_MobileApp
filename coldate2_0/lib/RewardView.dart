@@ -23,6 +23,21 @@ class _RewardViewState extends State<RewardView> {
       adUnitId: "ca-app-pub-8627512781946422/1095411828",
       onAdClosed: () {
         print("closed");
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("リワードを獲得しました"),
+              content: Text("広告が消えない場合は、アプリを再起動して見てください。"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("OK"),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            );
+          }
+        );
       },
       onAdLoaded: () {
         print("onadload");

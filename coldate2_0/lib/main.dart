@@ -386,7 +386,7 @@ class Home extends StatelessWidget {
   Future<String> getRewardtime() async{
     //リワードに設定された時間の取得
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("REWARD_DAY") == null ? "1900-99-99 23:59" : prefs.getString("REWARD_DAY");
+    return prefs.getString("REWARD_DAY") == null ? "1900-09-09 23:59" : prefs.getString("REWARD_DAY");
   }
 }
 
@@ -481,6 +481,8 @@ class Intro extends StatelessWidget {
     );
   }
 }
+
+
 
 final InterstitialAd myInterstitial2 = InterstitialAd(
   adUnitId: 'ca-app-pub-8627512781946422/2312420457',

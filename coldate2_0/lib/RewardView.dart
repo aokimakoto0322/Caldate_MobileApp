@@ -1,22 +1,42 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_google_ad_manager/flutter_google_ad_manager.dart';
 
 class RewardView extends StatefulWidget{
-
   @override
   _RewardViewState createState() => _RewardViewState();
 }
 
 class _RewardViewState extends State<RewardView> {
 
+  DFPRewardedAd _rewardedAd;
+
   @override
   void initState(){
-    myRewarded.load();
     super.initState();
+    _rewardedAd = DFPRewardedAd(
+      isDevelop: false, 
+      adUnitId: "ca-app-pub-8627512781946422/1095411828",
+      onAdClosed: () {
+        print("closed");
+      },
+      onAdLoaded: () {
+        print("onadload");
+      },
+      onVideoCompleted: () {
+        print("video completed");
+        setRewardtime(1);
+      },
+      onRewarded: (type, amount) {
+        print(type);
+        print(amount.toString());
+      },
+    );
+    _rewardedAd.load();
   }
 
   String day = "";
@@ -86,7 +106,7 @@ class _RewardViewState extends State<RewardView> {
                       Center(
                         child: Container(
                           margin: EdgeInsets.all(10),
-                          child: Text("本機能はベータ版ですので、プレミアム期間中でも広告が流れる場合がございます。"),
+                          child: Text("本機能はベータ版ですので、プレミアム期間中でも広告が流れる場合がございます。アプリを再起動し直すと改善する場合がございます。"),
                         ),
                       ),
                     ],
@@ -108,7 +128,8 @@ class _RewardViewState extends State<RewardView> {
                                   ),
                                 ),
                                 onPressed: () async{
-                                  myRewarded.show();
+                                  showRewarded();
+                                  //myRewarded.show();
                                 },
                               ),
                             );
@@ -151,7 +172,8 @@ class _RewardViewState extends State<RewardView> {
                                 ),
                               ),
                               onPressed: () async{
-                                myRewarded.show();
+                                showRewarded();
+                                //myRewarded.show();
                               },
                             ),
                           );
@@ -168,18 +190,15 @@ class _RewardViewState extends State<RewardView> {
     );
   }
 
-  final RewardedAd myRewarded = RewardedAd(
-    adUnitId: 'ca-app-pub-8627512781946422/1095411828',
-    request: AdRequest(),
-    listener: AdListener(
-      onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-        //リワードを得た場合の処理
-        setRewardtime(reward.amount);
-        //print(reward.type);
-        //print(reward.amount);
-      },
-    ),
-  );
+  Future<void> showRewarded() async {
+    try{
+      await _rewardedAd.show();
+    } on PlatformException catch (e){
+      if (e.message == 'not_loaded_yet') {
+        await _rewardedAd.load();
+      }
+    }
+  }
 
   static void setRewardtime(int day) async{
     //今日の日付を取得
@@ -202,6 +221,8 @@ class _RewardViewState extends State<RewardView> {
   Future<String> getRewardtime() async{
     //リワードに設定された時間の取得
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("REWARD_DAY") == null ? "1900-99-99 23:59" : prefs.getString("REWARD_DAY");
+    return prefs.getString("REWARD_DAY") == null ? "1900-09-09 23:59" : prefs.getString("REWARD_DAY");
   }
+
+  
 }

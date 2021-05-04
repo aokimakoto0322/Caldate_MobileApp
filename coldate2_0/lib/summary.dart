@@ -520,19 +520,42 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                   }))),
                       FadeAnimation(
                           1.1,
-                          Container(
-                            child: RaisedButton(
-                              child: Text('メニュー一覧'),
-                              shape: StadiumBorder(),
-                              onPressed: () {
-                                myInterstitial.show();
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) {
-                                    return MenuPage();
-                                  },
-                                ));
-                              },
-                            ),
+                          FutureBuilder(
+                            future: getRewardtime(),
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData){
+                                if(now.isAfter(dateformatter.parse(snapshot.data))){
+                                  print("今日よりどうがえつらんが後");
+                                  print(dateformatter.parse(snapshot.data));
+                                  myInterstitial.show();
+
+                                  //画面遷移
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) {
+                                      return MenuPage();
+                                    },
+                                  ));
+                                }else{
+                                  print("今日よりどうがえつらんが前");
+                                  print(dateformatter.parse(snapshot.data));
+                                }
+                              }else{
+                                return Container(
+                                  child: RaisedButton(
+                                    child: Text('メニュー一覧'),
+                                    shape: StadiumBorder(),
+                                    onPressed: () {
+                                      myInterstitial.show();
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) {
+                                          return MenuPage();
+                                        },
+                                      ));
+                                    },
+                                  ),
+                                );
+                              }
+                            },
                           )),
                       SizedBox(
                         height: 250,
@@ -551,7 +574,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
   Future<String> getRewardtime() async{
     //リワードに設定された時間の取得
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("REWARD_DAY") == null ? "1900-99-99 23:59" : prefs.getString("REWARD_DAY");
+    return prefs.getString("REWARD_DAY") == null ? "1900-09-09 23:59" : prefs.getString("REWARD_DAY");
   }
 
   //DBHelperの設定

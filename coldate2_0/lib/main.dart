@@ -146,10 +146,13 @@ class Home extends StatelessWidget {
                                       ])),
                                     ),
                                     ListTile(
-                                      title: Text("広告を消す"),
+                                      title: Text("リワードをみて広告を消す"),
                                       onTap: () {
                                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => RewardView()));
                                       },
+                                    ),
+                                    Divider(
+                                      color: Colors.black87
                                     ),
                                     ListTile(
                                       title: Text("過去食べたものを見る"),
@@ -184,8 +187,11 @@ class Home extends StatelessWidget {
                                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
                                       },
                                     ),
+                                    Divider(
+                                      color: Colors.black87
+                                    ),
                                     ListTile(
-                                      title: Text('設定'),
+                                      title: Text('背景画像の設定'),
                                       onTap: () {
                                         Navigator.of(context).push(MaterialPageRoute(
                                             builder: (context) => Settingpage()));
@@ -346,7 +352,7 @@ class Home extends StatelessWidget {
                                     ),
                                   );
                                 }else{
-                                  return Align();
+                                  return Text("");
                                 }
                               }else{
                                 return Align(
@@ -424,7 +430,7 @@ class Intro extends StatelessWidget {
         PageViewModel(
             title: "カロリーを保存する",
             body:
-                "食べたカロリー分数字をタップし、「今日の摂取カロリーに追加する」を押すと食べた分蓄積されます。\n\n食べた物のカロリーが分からない場合は「メニュー一覧」から食べた物を選択すれば、追加できます。",
+                "食べたカロリー分数字をタップし、「今日の摂取カロリーに追加する」を押すと食べた分蓄積されます。\n\n食べた物のカロリーが分からない場合は画面左ドロワーの「メニュー一覧」から食べた物を選択すれば、追加できます。\n\n画面上部をタップすると、過去のデータの閲覧・変更することができます。",
             image: Container(
               margin: EdgeInsets.only(top: 80),
               child: Center(
@@ -436,7 +442,7 @@ class Intro extends StatelessWidget {
             decoration: PageDecoration(pageColor: Colors.orange[100])),
         PageViewModel(
             title: "振り返る",
-            body: "真ん中のタブでは、過去摂取したカロリーをグラフで見ることができます。",
+            body: "真ん中のタブでは、過去摂取したカロリーをグラフで見ることができます。また、画面左ドロワーから、過去のデータの振り返りや修正することができます。",
             image: Container(
               margin: EdgeInsets.only(top: 80),
               child: Center(

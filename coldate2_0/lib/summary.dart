@@ -518,47 +518,8 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                       //print(pl.length);
                                     });
                                   }))),
-                      FadeAnimation(
-                          1.1,
-                          FutureBuilder(
-                            future: getRewardtime(),
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData){
-                                if(now.isAfter(dateformatter.parse(snapshot.data))){
-                                  print("今日よりどうがえつらんが後");
-                                  print(dateformatter.parse(snapshot.data));
-                                  myInterstitial.show();
-
-                                  //画面遷移
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) {
-                                      return MenuPage();
-                                    },
-                                  ));
-                                }else{
-                                  print("今日よりどうがえつらんが前");
-                                  print(dateformatter.parse(snapshot.data));
-                                }
-                              }else{
-                                return Container(
-                                  child: RaisedButton(
-                                    child: Text('メニュー一覧'),
-                                    shape: StadiumBorder(),
-                                    onPressed: () {
-                                      myInterstitial.show();
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) {
-                                          return MenuPage();
-                                        },
-                                      ));
-                                    },
-                                  ),
-                                );
-                              }
-                            },
-                          )),
                       SizedBox(
-                        height: 250,
+                        height: 180,
                       )
                     ],
                   ),

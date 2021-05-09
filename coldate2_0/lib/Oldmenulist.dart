@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'Groval.dart';
 import 'card.dart';
 import 'colcounter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'DatabaseHelper.dart';
 
@@ -917,5 +918,9 @@ class _OldmenulistState extends State<Oldmenulist> {
 
   Future<void> _update(int id, String menu, int cal) async{
     await dbHelper.updateMenu(id, menu, cal);
+  }
+
+  Future<void> _delete(int id) async{
+    await dbHelper.delete(id);
   }
 }

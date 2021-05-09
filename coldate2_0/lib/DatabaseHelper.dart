@@ -71,6 +71,15 @@ class DatabaseHelper {
     return await db.update(table, row, where: '$uniqid = ?', whereArgs: [id]);
   }
 
+  Future<void> delete(int id) async{
+    Database db = await instance.database;
+    await db.delete(
+      table,
+      where: "_id = ?",
+      whereArgs: [id]
+    );
+  }
+
   Future<void> updateMenu(int id, String menu, int cal) async{
     var values = <String, dynamic>{
       "menuname" : menu,

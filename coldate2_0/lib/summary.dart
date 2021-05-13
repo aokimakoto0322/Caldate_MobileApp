@@ -181,112 +181,50 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                                   return Text(
                                                       'データが登録されていません');
                                                 }
-                                                return FutureBuilder(
-                                                  future: getRewardtime(),
-                                                  builder: (context, snapshot) {
-                                                    if(snapshot.hasData){
-                                                      return FlatButton(
-                                                        onPressed: (){
-                                                          if(now.isAfter(dateformatter.parse(snapshot.data))){
-                                                            print("今日よりどうがえつらんが後");
-                                                            print(dateformatter.parse(snapshot.data));
-                                                            myInterstitial2.show();
-                                                          }else{
-                                                            print("今日よりどうがえつらんが前");
-                                                            print(dateformatter.parse(snapshot.data));
-                                                          }
-                                                          //myInterstitial2.show();
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) => Mainmenutab()
-                                                            )
-                                                          );
-                                                        },
-                                                        textColor: Colors.white,
-                                                        padding: EdgeInsets.all(0),
-                                                        child: Container(
-                                                          padding:
-                                                            EdgeInsets.all(10),
-                                                          child: Text(
-                                                          (() {
-                                                            //DBにアクセスして、今日の日付とDB最新の日付と比較
-                                                            //DBに今日の日付が有ったら0と書く
-
-                                                            if (p['date'] ==
-                                                                now.month
-                                                                        .toString() +
-                                                                    '/' +
-                                                                    now.day
-                                                                        .toString()) {
-                                                              return p['cal']
-                                                                      .toString() +
-                                                                  'kCal';
-                                                            } else {
-                                                              _col.setCol(0);
-                                                              var nextday = now
-                                                                      .day
-                                                                      .toInt() +
-                                                                  1;
-                                                              //Todo(id: p.length + 1, cal: 0, date: now.month.toString() + '/' + nextday.toString(), year: now.year.toString()).save();
-                                                              return '0kCal';
-                                                            }
-                                                          })(),
-                                                          style:
-                                                              GoogleFonts.lato(
-                                                                  fontSize: 65),
-                                                          )
-                                                        ),
-                                                      );
-                                                    }else{
-                                                      //リワード広告を見ていない場合
-                                                      return FlatButton(
-                                                        onPressed: (){
-                                                          myInterstitial2.show();
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) => Mainmenutab()
-                                                            )
-                                                          );
-                                                        },
-                                                        textColor: Colors.white,
-                                                        padding: EdgeInsets.all(0),
-                                                        child: Container(
-                                                            padding:
-                                                                EdgeInsets.all(10),
-                                                            child: Text(
-                                                              (() {
-                                                                //DBにアクセスして、今日の日付とDB最新の日付と比較
-                                                                //DBに今日の日付が有ったら0と書く
-
-                                                                if (p['date'] ==
-                                                                    now.month
-                                                                            .toString() +
-                                                                        '/' +
-                                                                        now.day
-                                                                            .toString()) {
-                                                                  return p['cal']
-                                                                          .toString() +
-                                                                      'kCal';
-                                                                } else {
-                                                                  _col.setCol(0);
-                                                                  var nextday = now
-                                                                          .day
-                                                                          .toInt() +
-                                                                      1;
-                                                                  //Todo(id: p.length + 1, cal: 0, date: now.month.toString() + '/' + nextday.toString(), year: now.year.toString()).save();
-                                                                  return '0kCal';
-                                                                }
-                                                              })(),
-                                                              style:
-                                                                  GoogleFonts.lato(
-                                                                      fontSize: 65),
-                                                          )
-                                                        ),
-                                                      );
-                                                    }
+                                                return FlatButton(
+                                                  onPressed: (){
+                                                    myInterstitial2.show();
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => Mainmenutab()
+                                                      )
+                                                    );
                                                   },
+                                                  textColor: Colors.white,
+                                                  padding: EdgeInsets.all(0),
+                                                  child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: Text(
+                                                        (() {
+                                                          //DBにアクセスして、今日の日付とDB最新の日付と比較
+                                                          //DBに今日の日付が有ったら0と書く
+
+                                                          if (p['date'] ==
+                                                              now.month
+                                                                      .toString() +
+                                                                  '/' +
+                                                                  now.day
+                                                                      .toString()) {
+                                                            return p['cal']
+                                                                    .toString() +
+                                                                'kCal';
+                                                          } else {
+                                                            _col.setCol(0);
+                                                            var nextday = now
+                                                                    .day
+                                                                    .toInt() +
+                                                                1;
+                                                            //Todo(id: p.length + 1, cal: 0, date: now.month.toString() + '/' + nextday.toString(), year: now.year.toString()).save();
+                                                            return '0kCal';
+                                                          }
+                                                        })(),
+                                                        style:
+                                                            GoogleFonts.lato(
+                                                                fontSize: 65),
+                                                    )
+                                                  ),
                                                 );
                                               } else {
                                                 return CircularProgressIndicator();
@@ -530,12 +468,6 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
             }
           }),
     );
-  }
-
-  Future<String> getRewardtime() async{
-    //リワードに設定された時間の取得
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("REWARD_DAY") == null ? "1900-09-09 23:59" : prefs.getString("REWARD_DAY");
   }
 
   //DBHelperの設定

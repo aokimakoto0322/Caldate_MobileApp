@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'MenuPage.dart';
-import 'RewardView.dart';
 import 'graphlayout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
@@ -124,172 +123,63 @@ class Home extends StatelessWidget {
                     child: Scaffold(
                       backgroundColor: Colors.transparent,
                       drawer: Drawer(
-                        child: Container(
-                          child: FutureBuilder(
-                            future: getRewardtime(),
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData){
-                                //sharedpreferenceがnull以外
-                                //広告を出すか比較する
-                                return ListView(
-                                  padding: EdgeInsets.zero,
-                                  children: <Widget>[
-                                    DrawerHeader(
-                                      child: Text(
-                                        'Caldate\nMenu',
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(colors: <Color>[
-                                        const Color(0xffa18cd1),
-                                        const Color(0xfffbc2eb)
-                                      ])),
-                                    ),
-                                    ListTile(
-                                      title: Text("リワードをみて広告を消す"),
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => RewardView()));
-                                      },
-                                    ),
-                                    Divider(
-                                      color: Colors.black87
-                                    ),
-                                    ListTile(
-                                      title: Text("過去食べたものを見る"),
-                                      onTap: () {
-                                        if(now.isAfter(dateformatter.parse(snapshot.data))){
-                                          print("今日よりどうがえつらんが後");
-                                          print(dateformatter.parse(snapshot.data));
-                                          myInterstitial2.show();
-                                        }else{
-                                          print("今日よりどうがえつらんが前");
-                                          print(dateformatter.parse(snapshot.data));
-                                        }
-                                        
-                                        //myInterstitial2.show();
-                                        //pushWithReload(context);
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => Mainmenutab()));
-                                      },
-                                    ),
-                                    ListTile(
-                                      title: Text("メニュー一覧"),
-                                      onTap: () {
-                                        if(now.isAfter(dateformatter.parse(snapshot.data))){
-                                          print("今日よりどうがえつらんが後");
-                                          print(dateformatter.parse(snapshot.data));
-                                          myInterstitial.show();
-                                        }else{
-                                          print("今日よりどうがえつらんが前");
-                                          print(dateformatter.parse(snapshot.data));
-                                        }
-                                        print("test" + snapshot.data);
-                                        //myInterstitial.show();
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
-                                      },
-                                    ),
-                                    Divider(
-                                      color: Colors.black87
-                                    ),
-                                    ListTile(
-                                      title: Text('背景画像の設定'),
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (context) => Settingpage()));
-                                      },
-                                    ),
-                                    ListTile(
-                                      title: Text('アプリについて'),
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (context) => Okotowari()));
-                                      },
-                                    ),
-                                    ListTile(
-                                      title: Text('情報'),
-                                      onTap: () {
-                                        showAboutDialog(
-                                          context: context,
-                                          applicationName: "Coldate",
-                                          applicationVersion: '3.1.0',
-                                          applicationLegalese: '2020 Coldate',
-                                          applicationIcon: Image.asset(
-                                            'assets/images/splashicon.png',
-                                            height: 50
-                                          )
-                                        );
-                                      },
-                                    )
-                                  ]
-                                );
-                              }else{
-                                //sharedpreferenceがnull
-                                return ListView(
-                                padding: EdgeInsets.zero,
-                                children: <Widget>[
-                                  DrawerHeader(
-                                    child: Text(
-                                      'Caldate\nMenu',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(colors: <Color>[
-                                      const Color(0xffa18cd1),
-                                      const Color(0xfffbc2eb)
-                                    ])),
-                                  ),
-                                  ListTile(
-                                    title: Text("広告を消す"),
-                                    onTap: () {
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RewardView()));
-                                    },
-                                  ),
-                                  ListTile(
-                                    title: Text("過去食べたものを見る"),
-                                    onTap: () {
-                                      myInterstitial2.show();
-                                      //pushWithReload(context);
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Mainmenutab()));
-                                    },
-                                  ),
-                                  ListTile(
-                                    title: Text("メニュー一覧"),
-                                    onTap: () {
-                                      myInterstitial.show();
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
-                                    },
-                                  ),
-                                  ListTile(
-                                    title: Text('設定'),
-                                    onTap: () {
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context) => Settingpage()));
-                                    },
-                                  ),
-                                  ListTile(
-                                    title: Text('アプリについて'),
-                                    onTap: () {
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context) => Okotowari()));
-                                    },
-                                  ),
-                                  ListTile(
-                                    title: Text('情報'),
-                                    onTap: () {
-                                      showAboutDialog(
-                                          context: context,
-                                          applicationName: "Coldate",
-                                          applicationVersion: '3.0.0',
-                                          applicationLegalese: '2020 Coldate',
-                                          applicationIcon: Image.asset(
-                                              'assets/images/splashicon.png',
-                                              height: 50));
-                                    },
-                                  )
-                                ]);
-                              }
+                        child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: <Widget>[
+                          DrawerHeader(
+                            child: Text(
+                              'Caldate\nMenu',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(colors: <Color>[
+                              const Color(0xffa18cd1),
+                              const Color(0xfffbc2eb)
+                            ])),
+                          ),
+                          ListTile(
+                            title: Text("過去食べたものを見る"),
+                            onTap: () {
+                              myInterstitial2.show();
+                              //pushWithReload(context);
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Mainmenutab()));
                             },
                           ),
-                        ),
+                          ListTile(
+                            title: Text("メニュー一覧"),
+                            onTap: () {
+                              myInterstitial.show();
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
+                            },
+                          ),
+                          ListTile(
+                            title: Text('設定'),
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Settingpage()));
+                            },
+                          ),
+                          ListTile(
+                            title: Text('アプリについて'),
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Okotowari()));
+                            },
+                          ),
+                          ListTile(
+                            title: Text('情報'),
+                            onTap: () {
+                              showAboutDialog(
+                                  context: context,
+                                  applicationName: "Coldate",
+                                  applicationVersion: '3.0.0',
+                                  applicationLegalese: '2020 Coldate',
+                                  applicationIcon: Image.asset(
+                                      'assets/images/splashicon.png',
+                                      height: 50));
+                            },
+                          )
+                        ]),
                       ),
                       appBar: AppBar(
                         //透過率の設定１
@@ -338,34 +228,14 @@ class Home extends StatelessWidget {
                               metabo(),
                             ],
                           ),
-                          FutureBuilder(
-                            future: getRewardtime(),
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData){
-                                if(now.isAfter(dateformatter.parse(snapshot.data))){
-                                  return Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      child: adWidget,
-                                      width: mybanner.size.width.toDouble(),
-                                      height: mybanner.size.height.toDouble(),
-                                    ),
-                                  );
-                                }else{
-                                  return Text("");
-                                }
-                              }else{
-                                return Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    child: adWidget,
-                                    width: mybanner.size.width.toDouble(),
-                                    height: mybanner.size.height.toDouble(),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              child: adWidget,
+                              width: mybanner.size.width.toDouble(),
+                              height: mybanner.size.height.toDouble(),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -387,12 +257,6 @@ class Home extends StatelessWidget {
   _getBlur() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getDouble('Blur') ?? 0;
-  }
-
-  Future<String> getRewardtime() async{
-    //リワードに設定された時間の取得
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("REWARD_DAY") == null ? "1900-09-09 23:59" : prefs.getString("REWARD_DAY");
   }
 }
 

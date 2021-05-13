@@ -103,9 +103,6 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
     final Size size = MediaQuery.of(context).size;
 
     DateTime now = DateTime.now();
-    var dateformatter = DateFormat("yyyy-MM-dd HH:mm");
-
-    
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -158,8 +155,12 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                         Container(
                                           margin: EdgeInsets.only(top: 30),
                                           child: Icon(
-                                            Icons.calendar_today_outlined
+                                            Icons.speaker_notes_outlined
                                           )
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: 24),
+                                          child: Text("履歴")
                                         )
                                       ],
                                     )),

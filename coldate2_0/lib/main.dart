@@ -238,6 +238,24 @@ class Home extends StatelessWidget {
                           )
                         ],
                       ),
+                      floatingActionButton: Container(
+                        margin: EdgeInsets.only(bottom: 55),
+                        child: FloatingActionButton.extended(
+                          onPressed: () {
+                            myInterstitial.show();
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
+                          },
+                          label: Text(
+                            "メニュー表",
+                            style: TextStyle(
+                              color: Colors.pink[100],
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          icon: const Icon(Icons.list, color: Colors.white),
+                          backgroundColor: Colors.pink,
+                        ),
+                      ),
                     ),
                   );
                 } else {

@@ -705,7 +705,7 @@ class _GraphState extends State<graphlayout>
                           ),
                         )),
                     SizedBox(
-                      height: 100,
+                      height: 150,
                     )
                   ],
                 ),

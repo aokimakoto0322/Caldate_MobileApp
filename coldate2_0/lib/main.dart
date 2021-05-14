@@ -1,16 +1,13 @@
 import 'dart:ui';
 
-import 'package:coldate2_0/DatabaseHelper.dart';
 import 'package:coldate2_0/Mainmenutab.dart';
 import 'package:coldate2_0/Okotowari.dart';
-import 'package:coldate2_0/Oldmenulist.dart';
 import 'package:coldate2_0/Piechart.dart';
 import 'package:coldate2_0/SettingPage.dart';
 import 'package:coldate2_0/file_controller.dart';
 import 'package:coldate2_0/metabo.dart';
 import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'MenuPage.dart';
 import 'graphlayout.dart';
@@ -19,7 +16,6 @@ import 'package:after_layout/after_layout.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:supercharged/supercharged.dart';
 import 'models.dart';
-import 'package:rate_my_app/rate_my_app.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
@@ -100,10 +96,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    DateTime now = DateTime.now();
-    var dateformatter = DateFormat("yyyy-MM-dd HH:mm");
-    
     final Size size = MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,

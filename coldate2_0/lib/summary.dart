@@ -11,8 +11,6 @@ import 'Mainmenutab.dart';
 import 'models.dart';
 import 'colcounter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'MenuPage.dart';
-import 'file_controller.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 
 colcounter _col = new colcounter();

@@ -33,6 +33,8 @@ class _OldmenulistState extends State<Oldmenulist> {
 
   var yesterdaycount = colcounter();
 
+  var pastcount = colcounter();
+
   //過去日付選択
   DateTime _date = DateTime.now();
   //選択フラグ
@@ -148,6 +150,218 @@ class _OldmenulistState extends State<Oldmenulist> {
                       }
                     });
 
+                    //今日食べたものリストから削除するメソッド
+                    Future<bool> _showConfirmationDialog(BuildContext context, String action, int index, int id) {
+                      return showDialog<bool>(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return FutureBuilder(
+                            future: Todo().select().toList(),
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData){
+                                return AlertDialog(
+                                  title: Text('削除'),
+                                  content: Text("$action を削除しますか？"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('いいえ'),
+                                      onPressed: () {
+                                        Navigator.pop(context, false); // showDialog() returns false
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      child: const Text('はい'),
+                                      onPressed: () {
+                                        Navigator.pop(context, true); // showDialog() returns true
+                                        setState(() {
+                                          //リストから削除
+                                          todaylistitem.removeAt(index);
+                                          //食べたもののDBから削除
+                                          _delete(id);
+
+                                          //入力後のトータルカロリーの再計算
+                                          int tmp = 0;
+                                          todaylistitem.forEach((element) {
+                                            tmp += element["menucal"];
+                                          });
+                                          //再計算した値をセット
+                                          todaycount.setCol(tmp);
+                                          
+                                          //summaryに表示されるDBの値をUPDATEで変更
+                                          Todo(id: snapshot.data.length, cal: todaycount.getCol(), date: now.month.toString() + '/' + now.day.toString(), year: now.year.toString()).save();
+
+                                          //snackBarの表示
+                                          _scaffoldKey.currentState.showSnackBar(
+                                            SnackBar(
+                                              content: Text("削除しました"),
+                                              duration: const Duration(seconds: 5),
+                                              action: SnackBarAction(
+                                                label: "OK",
+                                                onPressed: () {
+                                                  //snackbarのOKボタンを押したときの動作
+                                                  //特になし
+                                                },
+                                              ),
+                                            )
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }else{
+                                return CircularProgressIndicator();
+                              }
+                            },
+                          );
+                        },
+                      );
+                    }
+
+                    //昨日食べたものから削除するメソッド
+                    Future<bool> _showConfirmationYesterdayDialog(BuildContext context, String action, int index, int id) {
+                      return showDialog<bool>(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return FutureBuilder(
+                            future: Todo().select().toList(),
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData){
+                                return AlertDialog(
+                                  title: Text('削除'),
+                                  content: Text("$action を削除しますか？"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('いいえ'),
+                                      onPressed: () {
+                                        Navigator.pop(context, false); // showDialog() returns false
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      child: const Text('はい'),
+                                      onPressed: () {
+                                        Navigator.pop(context, true); // showDialog() returns true
+                                        setState(() {
+                                          //リストから削除
+                                          yesterdaylistitem.removeAt(index);
+                                          //食べたもののDBから削除
+                                          _delete(id);
+
+                                          //入力後のトータルカロリーの再計算
+                                          int tmp = 0;
+                                          yesterdaylistitem.forEach((element) {
+                                            tmp += element["menucal"];
+                                          });
+                                          //再計算した値をセット
+                                          yesterdaycount.setCol(tmp);
+                                          
+                                          //summaryに表示されるDBの値をUPDATEで変更
+                                          Todo(id: snapshot.data.length-1, cal: yesterdaycount.getCol(), date: yesterday.month.toString() + '/' + yesterday.day.toString(), year: yesterday.year.toString()).save();
+
+                                          //snackBarの表示
+                                          _scaffoldKey.currentState.showSnackBar(
+                                            SnackBar(
+                                              content: Text("削除しました"),
+                                              duration: const Duration(seconds: 5),
+                                              action: SnackBarAction(
+                                                label: "OK",
+                                                onPressed: () {
+                                                  //snackbarのOKボタンを押したときの動作
+                                                  //特になし
+                                                },
+                                              ),
+                                            )
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }else{
+                                return CircularProgressIndicator();
+                              }
+                            },
+                          );
+                        },
+                      );
+                    }
+
+                    //過去食べたものから削除するメソッド
+                    Future<bool> _showConfirmationPastDialog(BuildContext context, String action, int index, int id, String selectedDate, String selectedYear) {
+                      return showDialog<bool>(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return FutureBuilder(
+                            future: Todo().select().toList(),
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData){
+                                return AlertDialog(
+                                  title: Text('削除'),
+                                  content: Text("$action を削除しますか？"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('いいえ'),
+                                      onPressed: () {
+                                        Navigator.pop(context, false); // showDialog() returns false
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      child: const Text('はい'),
+                                      onPressed: (){
+                                        Navigator.pop(context, true); // showDialog() returns true
+                                        setState(() async {
+                                          //リストから削除
+                                          pastlistitem.removeAt(index);
+                                          //食べたもののDBから削除
+                                          _delete(id);
+
+                                          //入力後のトータルカロリーの再計算
+                                          int tmp = 0;
+                                          pastlistitem.forEach((element) {
+                                            tmp += element["menucal"];
+                                          });
+                                          //再計算した値をセット
+                                          pastcount.setCol(tmp);
+
+                                          //id取得
+                                          var p1 = await Todo().select().date.contains(selectedDate).toList();
+                                          var x1 = p1[p1.length - 1].toMap();
+                                          var getid = x1['id'];
+                                          
+                                          //summaryに表示されるDBの値をUPDATEで変更
+                                          Todo(id: getid, cal: pastcount.getCol(), date: selectedDate, year: selectedYear).save();
+
+                                          //snackBarの表示
+                                          _scaffoldKey.currentState.showSnackBar(
+                                            SnackBar(
+                                              content: Text("削除しました"),
+                                              duration: const Duration(seconds: 5),
+                                              action: SnackBarAction(
+                                                label: "OK",
+                                                onPressed: () {
+                                                  //snackbarのOKボタンを押したときの動作
+                                                  //特になし
+                                                },
+                                              ),
+                                            )
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }else{
+                                return CircularProgressIndicator();
+                              }
+                            },
+                          );
+                        },
+                      );
+                    }
+
                     return PageView(
                       children: [
                         //リスト１　今日食べたもの
@@ -197,192 +411,214 @@ class _OldmenulistState extends State<Oldmenulist> {
                                     child: ListView.builder(
                                       itemCount: todaylistitem.length,
                                       itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(
-                                            todaylistitem[index]["menuname"],
-                                            style: TextStyle(color: Colors.white),
+                                        return Dismissible(
+                                          key: ObjectKey(todaylistitem[index]["id"]),
+                                          background: Container(
+                                            color: Colors.red,
                                           ),
-                                          subtitle: Text(
-                                            todaylistitem[index]["datetime"],
-                                            style:
-                                                TextStyle(color: Colors.white60),
-                                          ),
-                                          trailing: Text(
-                                            todaylistitem[index]["menucal"]
-                                                    .toString() +
-                                                "kCal",
-                                            style: TextStyle(color: Colors.white),
-                                          ),
-                                          onTap: () async{
-                                            //食品名の初期値設定
-                                            menuController.text = todaylistitem[index]["menuname"];
-
-                                            //カロリーの初期値設定
-                                            calController.text = todaylistitem[index]["menucal"].toString();
-
-
-                                            //ダイアログの表示
-                                            var dialog = await showGeneralDialog(
-                                              barrierColor: Colors.black.withOpacity(0.5),
-                                              transitionDuration: Duration(milliseconds: 200),
-                                              context: context,
-                                              barrierDismissible: true,
-                                              barrierLabel: "",
-                                              transitionBuilder: (context, a1, a2, widget) {
-                                                return Transform.scale(
-                                                  scale: a1.value,
-                                                  child: Dialog(
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(4.0)
-                                                    ),
-                                                    child: Stack(
-                                                      overflow: Overflow.visible,
-                                                      alignment: Alignment.topCenter,
-                                                      children: [
-                                                        FutureBuilder(
-                                                          future: Todo().select().toList(),
-                                                          builder: (context, snapshot) {
-                                                            if(snapshot.hasData){
-                                                              var i = snapshot.data;
-                                                              return Container(
-                                                                height: screenheight - 200,
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets.fromLTRB(10, 70, 10, 10),
-                                                                  child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                    children: [
-                                                                      TextFormField(
-                                                                        controller: menuController,
-                                                                        maxLength: 50,
-                                                                        decoration: const InputDecoration(
-                                                                          border: OutlineInputBorder(),
-                                                                          labelText: "メニュー名"
-                                                                        ),
-                                                                      ),
-                                                                      TextFormField(
-                                                                        controller: calController,
-                                                                        keyboardType: TextInputType.number,
-                                                                        maxLength: 4,
-                                                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                                                        decoration: const InputDecoration(
-                                                                          border: OutlineInputBorder(),
-                                                                          labelText: "カロリー"
-                                                                        ),
-                                                                      ),
-                                                                      Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                        children: [
-                                                                          TextButton(
-                                                                            child: Text("キャンセル"),
-                                                                            onPressed: () => Navigator.of(context).pop(),
-                                                                          ),
-                                                                          ElevatedButton(
-                                                                            onPressed: () async{
-                                                                            //入力後のデータ
-                                                                            int id = todaylistitem[index]["id"];
-                                                                            String aftermenuname = menuController.text;
-                                                                            int aftermenucal = 0;
-                                                                            try{
-                                                                              aftermenucal = int.parse(calController.text);
-                                                                            }catch(e){
-                                                                              AlertDialog(
-                                                                                shape: const RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.all(Radius.circular(
-                                                                                    10)
-                                                                                  )
-                                                                                ),
-                                                                                backgroundColor: Color(0xffa18cd1).withOpacity(0.85),
-                                                                                title:Text(
-                                                                                  '項目にエラーがあります',
-                                                                                  style: TextStyle(
-                                                                                  color: Colors.white,
-                                                                                  fontWeight: FontWeight.bold),
-                                                                                ),
-                                                                                content:
-                                                                                  Column(
-                                                                                    mainAxisSize: MainAxisSize.min,
-                                                                                      children: <Widget>[
-                                                                                        SizedBox(
-                                                                                          height: 10,
-                                                                                        ),
-                                                                                        
-                                                                                        Text(
-                                                                                          '・変更するカロリーには数字以外は入力できません',
-                                                                                          style: TextStyle(color: Colors.white, fontSize: 16),
-                                                                                        )
-                                                                                      ],
-                                                                                  )
-                                                                              );
-                                                                            }
-                                                                            
-                                                                            
-                                                                            //リストの更新
-                                                                            todaylistitem[index]["menuname"] = menuController.text;
-                                                                            todaylistitem[index]["menucal"] = int.parse(calController.text);
-
-                                                                            //入力後のトータルカロリーの再計算
-                                                                            int tmp = 0;
-                                                                            todaylistitem.forEach((element) {
-                                                                              tmp += element["menucal"];
-                                                                            });
-
-                                                                            todaycount.setCol(tmp);
-
-                                                                            //Summaryに表示されるDBの更新                                                      
-                                                                            await Todo(id: i.length, cal: todaycount.getCol(), date: now.month.toString() + '/' + now.day.toString(), year: now.year.toString()).save();
-                                                                            
-                                                                            
-                                                                            //食べたもののDB更新
-                                                                            await _update(id, aftermenuname, aftermenucal);
-                                                                            
-                                                                      
-                                                                            //snackBarの表示
-                                                                            _scaffoldKey.currentState.showSnackBar(
-                                                                              SnackBar(
-                                                                                content: Text("変更しました。"),
-                                                                                duration: const Duration(seconds: 5),
-                                                                                action: SnackBarAction(
-                                                                                  label: "OK",
-                                                                                  onPressed: () {
-                                                                                    //snackbarのOKボタンを押したときの動作
-                                                                                    //特になし
-                                                                                  },
-                                                                                ),
-                                                                              )
-                                                                            );
-                                                                            
-                                                                            //ダイアログを閉じる
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                            child: Text('変更する', style: TextStyle(color: Colors.white),),
-                                                                          ),
-                                                                        ],
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }else{
-                                                              return CircularProgressIndicator();
-                                                            }
-                                                          },
-                                                          
-                                                        ),
-                                                        Positioned(
-                                                          top: -60,
-                                                          child: CircleAvatar(
-                                                            backgroundColor: Color(0xff332A7C),
-                                                            radius: 60,
-                                                            child: Icon(Icons.refresh, color: Colors.white, size: 50,),
-                                                          )
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ),
-                                                );
-                                              }, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {  },
-                                            );
+                                          confirmDismiss: (direction) async{
+                                            switch(direction) {
+                                              case DismissDirection.endToStart:
+                                                return await _showConfirmationDialog(context, todaylistitem[index]["menuname"], index, todaylistitem[index]["id"]) == true;
+                                              case DismissDirection.startToEnd:
+                                                return await _showConfirmationDialog(context, todaylistitem[index]["menuname"], index, todaylistitem[index]["id"]) == true;
+                                              case DismissDirection.horizontal:
+                                              case DismissDirection.vertical:
+                                              case DismissDirection.up:
+                                              case DismissDirection.down:
+                                                assert(false);
+                                                break;
+                                              case DismissDirection.none:
+                                            }
+                                            return false;
                                           },
+                                          child: ListTile(
+                                            title: Text(
+                                              todaylistitem[index]["menuname"],
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            subtitle: Text(
+                                              todaylistitem[index]["datetime"],
+                                              style:
+                                                  TextStyle(color: Colors.white60),
+                                            ),
+                                            trailing: Text(
+                                              todaylistitem[index]["menucal"]
+                                                      .toString() +
+                                                  "kCal",
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            onTap: () async{
+                                              //食品名の初期値設定
+                                              menuController.text = todaylistitem[index]["menuname"];
+
+                                              //カロリーの初期値設定
+                                              calController.text = todaylistitem[index]["menucal"].toString();
+
+
+                                              //ダイアログの表示
+                                              var dialog = await showGeneralDialog(
+                                                barrierColor: Colors.black.withOpacity(0.5),
+                                                transitionDuration: Duration(milliseconds: 200),
+                                                context: context,
+                                                barrierDismissible: true,
+                                                barrierLabel: "",
+                                                transitionBuilder: (context, a1, a2, widget) {
+                                                  return Transform.scale(
+                                                    scale: a1.value,
+                                                    child: Dialog(
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(4.0)
+                                                      ),
+                                                      child: Stack(
+                                                        overflow: Overflow.visible,
+                                                        alignment: Alignment.topCenter,
+                                                        children: [
+                                                          FutureBuilder(
+                                                            future: Todo().select().toList(),
+                                                            builder: (context, snapshot) {
+                                                              if(snapshot.hasData){
+                                                                var i = snapshot.data;
+                                                                return Container(
+                                                                  height: screenheight - 200,
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.fromLTRB(10, 70, 10, 10),
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                      children: [
+                                                                        TextFormField(
+                                                                          controller: menuController,
+                                                                          maxLength: 50,
+                                                                          decoration: const InputDecoration(
+                                                                            border: OutlineInputBorder(),
+                                                                            labelText: "メニュー名"
+                                                                          ),
+                                                                        ),
+                                                                        TextFormField(
+                                                                          controller: calController,
+                                                                          keyboardType: TextInputType.number,
+                                                                          maxLength: 4,
+                                                                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                                          decoration: const InputDecoration(
+                                                                            border: OutlineInputBorder(),
+                                                                            labelText: "カロリー"
+                                                                          ),
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                          children: [
+                                                                            TextButton(
+                                                                              child: Text("キャンセル"),
+                                                                              onPressed: () => Navigator.of(context).pop(),
+                                                                            ),
+                                                                            ElevatedButton(
+                                                                              onPressed: () async{
+                                                                              //入力後のデータ
+                                                                              int id = todaylistitem[index]["id"];
+                                                                              String aftermenuname = menuController.text;
+                                                                              int aftermenucal = 0;
+                                                                              try{
+                                                                                aftermenucal = int.parse(calController.text);
+                                                                              }catch(e){
+                                                                                AlertDialog(
+                                                                                  shape: const RoundedRectangleBorder(
+                                                                                    borderRadius: BorderRadius.all(Radius.circular(
+                                                                                      10)
+                                                                                    )
+                                                                                  ),
+                                                                                  backgroundColor: Color(0xffa18cd1).withOpacity(0.85),
+                                                                                  title:Text(
+                                                                                    '項目にエラーがあります',
+                                                                                    style: TextStyle(
+                                                                                    color: Colors.white,
+                                                                                    fontWeight: FontWeight.bold),
+                                                                                  ),
+                                                                                  content:
+                                                                                    Column(
+                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                        children: <Widget>[
+                                                                                          SizedBox(
+                                                                                            height: 10,
+                                                                                          ),
+                                                                                          
+                                                                                          Text(
+                                                                                            '・変更するカロリーには数字以外は入力できません',
+                                                                                            style: TextStyle(color: Colors.white, fontSize: 16),
+                                                                                          )
+                                                                                        ],
+                                                                                    )
+                                                                                );
+                                                                              }
+                                                                              
+                                                                              
+                                                                              //リストの更新
+                                                                              todaylistitem[index]["menuname"] = menuController.text;
+                                                                              todaylistitem[index]["menucal"] = int.parse(calController.text);
+
+                                                                              //入力後のトータルカロリーの再計算
+                                                                              int tmp = 0;
+                                                                              todaylistitem.forEach((element) {
+                                                                                tmp += element["menucal"];
+                                                                              });
+                                                                              //再計算した値をセット
+                                                                              todaycount.setCol(tmp);
+
+                                                                              //Summaryに表示されるDBの更新                                                      
+                                                                              await Todo(id: i.length, cal: todaycount.getCol(), date: now.month.toString() + '/' + now.day.toString(), year: now.year.toString()).save();
+                                                                              
+                                                                              
+                                                                              //食べたもののDB更新
+                                                                              await _update(id, aftermenuname, aftermenucal);
+                                                                              
+                                                                        
+                                                                              //snackBarの表示
+                                                                              _scaffoldKey.currentState.showSnackBar(
+                                                                                SnackBar(
+                                                                                  content: Text("変更しました。"),
+                                                                                  duration: const Duration(seconds: 5),
+                                                                                  action: SnackBarAction(
+                                                                                    label: "OK",
+                                                                                    onPressed: () {
+                                                                                      //snackbarのOKボタンを押したときの動作
+                                                                                      //特になし
+                                                                                    },
+                                                                                  ),
+                                                                                )
+                                                                              );
+                                                                              
+                                                                              //ダイアログを閉じる
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                              child: Text('変更する', style: TextStyle(color: Colors.white),),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }else{
+                                                                return CircularProgressIndicator();
+                                                              }
+                                                            },
+                                                            
+                                                          ),
+                                                          Positioned(
+                                                            top: -60,
+                                                            child: CircleAvatar(
+                                                              backgroundColor: Color(0xff332A7C),
+                                                              radius: 60,
+                                                              child: Icon(Icons.refresh, color: Colors.white, size: 50,),
+                                                            )
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ),
+                                                  );
+                                                }, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {  },
+                                              );
+                                            },
+                                          ),
                                         );
                                       },
                                     ),
@@ -439,164 +675,186 @@ class _OldmenulistState extends State<Oldmenulist> {
                                     child: ListView.builder(
                                       itemCount: yesterdaylistitem.length,
                                       itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(
-                                            yesterdaylistitem[index]["menuname"],
-                                            style: TextStyle(color: Colors.white),
+                                        return Dismissible(
+                                          key: ObjectKey(yesterdaylistitem[index]["id"]),
+                                          background: Container(
+                                            color: Colors.red,
                                           ),
-                                          subtitle: Text(
-                                            yesterdaylistitem[index]["datetime"],
-                                            style:
-                                                TextStyle(color: Colors.white60),
-                                          ),
-                                          trailing: Text(
-                                            yesterdaylistitem[index]["menucal"]
-                                                    .toString() +
-                                                "kCal",
-                                            style: TextStyle(color: Colors.white),
-                                          ),
-                                          onTap: ()  async{
-                                            //食品名の初期値設定
-                                            menuController.text = yesterdaylistitem[index]["menuname"];
-
-                                            //カロリーの初期値設定
-                                            calController.text = yesterdaylistitem[index]["menucal"].toString();
-
-
-                                            //ダイアログの表示
-                                            var dialog = await showGeneralDialog(
-                                              barrierColor: Colors.black.withOpacity(0.5),
-                                              transitionDuration: Duration(milliseconds: 200),
-                                              context: context,
-                                              barrierDismissible: true,
-                                              barrierLabel: "",
-                                              transitionBuilder: (context, a1, a2, widget) {
-                                                return Transform.scale(
-                                                  scale: a1.value,
-                                                  child: Dialog(
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(4.0)
-                                                    ),
-                                                    child: Stack(
-                                                      overflow: Overflow.visible,
-                                                      alignment: Alignment.topCenter,
-                                                      children: [
-                                                        FutureBuilder(
-                                                          future: Todo().select().toList(),
-                                                          builder: (context, snapshot) {
-                                                            if(snapshot.hasData){
-                                                              var i = snapshot.data;
-                                                              return Container(
-                                                                height: screenheight - 200,
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets.fromLTRB(10, 70, 10, 10),
-                                                                  child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                    children: [
-                                                                      TextFormField(
-                                                                        controller: menuController,
-                                                                        maxLength: 50,
-                                                                        decoration: const InputDecoration(
-                                                                          border: OutlineInputBorder(),
-                                                                          labelText: "メニュー名"
-                                                                        ),
-                                                                      ),
-                                                                      TextFormField(
-                                                                        controller: calController,
-                                                                        keyboardType: TextInputType.number,
-                                                                        maxLength: 4,
-                                                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                                                        decoration: const InputDecoration(
-                                                                          border: OutlineInputBorder(),
-                                                                          labelText: "カロリー"
-                                                                        ),
-                                                                      ),
-                                                                      Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                        children: [
-                                                                          TextButton(
-                                                                            child: Text("キャンセル"),
-                                                                            onPressed: () => Navigator.of(context).pop(),
-                                                                          ),
-                                                                          ElevatedButton(
-                                                                            onPressed: () async{
-                                                                            //入力後のデータ
-                                                                            int id = yesterdaylistitem[index]["id"];
-                                                                            String aftermenuname = menuController.text;
-                                                                            int aftermenucal = int.parse(calController.text);
-                                                                            
-                                                                            //リストの更新
-                                                                            yesterdaylistitem[index]["menuname"] = menuController.text;
-                                                                            yesterdaylistitem[index]["menucal"] = int.parse(calController.text);
-
-                                                                            //入力後のトータルカロリーの再計算
-                                                                            int tmp = 0;
-                                                                            yesterdaylistitem.forEach((element) {
-                                                                              tmp += element["menucal"];
-                                                                            });
-
-                                                                            todaycount.setCol(tmp);
-
-                                                                            //今日のカロリーを未入力の場合のバリデーションチェック
-                                                                            if(todaylistitem.length == 0){
-                                                                              //Summaryに表示されるDBの更新                                                      
-                                                                              await Todo(id: i.length, cal: todaycount.getCol(), date: yesterday.month.toString() + '/' + yesterday.day.toString(), year: yesterday.year.toString()).save();
-                                                                            }else{
-                                                                              //Summaryに表示されるDBの更新                                                      
-                                                                              await Todo(id: i.length - 1, cal: todaycount.getCol(), date: yesterday.month.toString() + '/' + yesterday.day.toString(), year: yesterday.year.toString()).save();
-                                                                            }
-                                                                            
-                                                                            //食べたもののDB更新
-                                                                            await _update(id, aftermenuname, aftermenucal);
-                                                                            
-                                                                      
-                                                                            //snackBarの表示
-                                                                            _scaffoldKey.currentState.showSnackBar(
-                                                                              SnackBar(
-                                                                                content: Text("変更しました。"),
-                                                                                duration: const Duration(seconds: 5),
-                                                                                action: SnackBarAction(
-                                                                                  label: "OK",
-                                                                                  onPressed: () {
-                                                                                    //snackbarのOKボタンを押したときの動作
-                                                                                    //特になし
-                                                                                  },
-                                                                                ),
-                                                                              )
-                                                                            );
-                                                                            
-                                                                            //ダイアログを閉じる
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                            child: Text('変更する', style: TextStyle(color: Colors.white),),
-                                                                          ),
-                                                                        ],
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }else{
-                                                              return CircularProgressIndicator();
-                                                            }
-                                                          },
-                                                          
-                                                        ),
-                                                        Positioned(
-                                                          top: -60,
-                                                          child: CircleAvatar(
-                                                            backgroundColor: Color(0xffF25767),
-                                                            radius: 60,
-                                                            child: Icon(Icons.refresh, color: Colors.white, size: 50,),
-                                                          )
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ),
-                                                );
-                                              }, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {  },
-                                            );
+                                          confirmDismiss: (direction) async{
+                                            switch(direction) {
+                                              case DismissDirection.endToStart:
+                                                return await _showConfirmationYesterdayDialog(context, yesterdaylistitem[index]["menuname"], index, yesterdaylistitem[index]["id"]) == true;
+                                              case DismissDirection.startToEnd:
+                                                return await _showConfirmationYesterdayDialog(context, yesterdaylistitem[index]["menuname"], index, yesterdaylistitem[index]["id"]) == true;
+                                              case DismissDirection.horizontal:
+                                              case DismissDirection.vertical:
+                                              case DismissDirection.up:
+                                              case DismissDirection.down:
+                                                assert(false);
+                                                break;
+                                              case DismissDirection.none:
+                                            }
+                                            return false;
                                           },
+                                          child: ListTile(
+                                            title: Text(
+                                              yesterdaylistitem[index]["menuname"],
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            subtitle: Text(
+                                              yesterdaylistitem[index]["datetime"],
+                                              style:
+                                                  TextStyle(color: Colors.white60),
+                                            ),
+                                            trailing: Text(
+                                              yesterdaylistitem[index]["menucal"]
+                                                      .toString() +
+                                                  "kCal",
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            onTap: ()  async{
+                                              //食品名の初期値設定
+                                              menuController.text = yesterdaylistitem[index]["menuname"];
+
+                                              //カロリーの初期値設定
+                                              calController.text = yesterdaylistitem[index]["menucal"].toString();
+
+
+                                              //ダイアログの表示
+                                              var dialog = await showGeneralDialog(
+                                                barrierColor: Colors.black.withOpacity(0.5),
+                                                transitionDuration: Duration(milliseconds: 200),
+                                                context: context,
+                                                barrierDismissible: true,
+                                                barrierLabel: "",
+                                                transitionBuilder: (context, a1, a2, widget) {
+                                                  return Transform.scale(
+                                                    scale: a1.value,
+                                                    child: Dialog(
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(4.0)
+                                                      ),
+                                                      child: Stack(
+                                                        overflow: Overflow.visible,
+                                                        alignment: Alignment.topCenter,
+                                                        children: [
+                                                          FutureBuilder(
+                                                            future: Todo().select().toList(),
+                                                            builder: (context, snapshot) {
+                                                              if(snapshot.hasData){
+                                                                var i = snapshot.data;
+                                                                return Container(
+                                                                  height: screenheight - 200,
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.fromLTRB(10, 70, 10, 10),
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                      children: [
+                                                                        TextFormField(
+                                                                          controller: menuController,
+                                                                          maxLength: 50,
+                                                                          decoration: const InputDecoration(
+                                                                            border: OutlineInputBorder(),
+                                                                            labelText: "メニュー名"
+                                                                          ),
+                                                                        ),
+                                                                        TextFormField(
+                                                                          controller: calController,
+                                                                          keyboardType: TextInputType.number,
+                                                                          maxLength: 4,
+                                                                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                                          decoration: const InputDecoration(
+                                                                            border: OutlineInputBorder(),
+                                                                            labelText: "カロリー"
+                                                                          ),
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                          children: [
+                                                                            TextButton(
+                                                                              child: Text("キャンセル"),
+                                                                              onPressed: () => Navigator.of(context).pop(),
+                                                                            ),
+                                                                            ElevatedButton(
+                                                                              onPressed: () async{
+                                                                              //入力後のデータ
+                                                                              int id = yesterdaylistitem[index]["id"];
+                                                                              String aftermenuname = menuController.text;
+                                                                              int aftermenucal = int.parse(calController.text);
+                                                                              
+                                                                              //リストの更新
+                                                                              yesterdaylistitem[index]["menuname"] = menuController.text;
+                                                                              yesterdaylistitem[index]["menucal"] = int.parse(calController.text);
+
+                                                                              //入力後のトータルカロリーの再計算
+                                                                              int tmp = 0;
+                                                                              yesterdaylistitem.forEach((element) {
+                                                                                tmp += element["menucal"];
+                                                                              });
+
+                                                                              todaycount.setCol(tmp);
+
+                                                                              //今日のカロリーを未入力の場合のバリデーションチェック
+                                                                              if(todaylistitem.length == 0){
+                                                                                //Summaryに表示されるDBの更新                                                      
+                                                                                await Todo(id: i.length, cal: todaycount.getCol(), date: yesterday.month.toString() + '/' + yesterday.day.toString(), year: yesterday.year.toString()).save();
+                                                                              }else{
+                                                                                //Summaryに表示されるDBの更新                                                      
+                                                                                await Todo(id: i.length - 1, cal: todaycount.getCol(), date: yesterday.month.toString() + '/' + yesterday.day.toString(), year: yesterday.year.toString()).save();
+                                                                              }
+                                                                              
+                                                                              //食べたもののDB更新
+                                                                              await _update(id, aftermenuname, aftermenucal);
+                                                                              
+                                                                        
+                                                                              //snackBarの表示
+                                                                              _scaffoldKey.currentState.showSnackBar(
+                                                                                SnackBar(
+                                                                                  content: Text("変更しました。"),
+                                                                                  duration: const Duration(seconds: 5),
+                                                                                  action: SnackBarAction(
+                                                                                    label: "OK",
+                                                                                    onPressed: () {
+                                                                                      //snackbarのOKボタンを押したときの動作
+                                                                                      //特になし
+                                                                                    },
+                                                                                  ),
+                                                                                )
+                                                                              );
+                                                                              
+                                                                              //ダイアログを閉じる
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                              child: Text('変更する', style: TextStyle(color: Colors.white),),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }else{
+                                                                return CircularProgressIndicator();
+                                                              }
+                                                            },
+                                                            
+                                                          ),
+                                                          Positioned(
+                                                            top: -60,
+                                                            child: CircleAvatar(
+                                                              backgroundColor: Color(0xffF25767),
+                                                              radius: 60,
+                                                              child: Icon(Icons.refresh, color: Colors.white, size: 50,),
+                                                            )
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ),
+                                                  );
+                                                }, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {  },
+                                              );
+                                            },
+                                          ),
                                         );
                                       },
                                     ),
@@ -623,19 +881,24 @@ class _OldmenulistState extends State<Oldmenulist> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
                                       margin: EdgeInsets.only(top: 40, left: 15),
-                                      child: TextButton(
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all(Colors.yellowAccent[100])
+                                          
+                                        ),
                                         child: flag == false
                                             ? Text(
-                                              "過去のデータを選択する",
+                                              "過去データ選択",
                                               style: TextStyle(
-                                                fontSize: 22
+                                                fontSize: 16,
+                                                color: Colors.black54
                                               ),
                                               )
-                                            : Text(_date.year.toString() + "年" + _date.month.toString() + "月" + _date.day.toString() + "日", style: TextStyle(fontSize: 22),),
+                                            : Text(_date.year.toString() + "年" + _date.month.toString() + "月" + _date.day.toString() + "日", style: TextStyle(fontSize: 22, color: Colors.black54),),
                                         onPressed: () async {
                                           //日付選択
                                           _selectDate(context);
@@ -645,10 +908,15 @@ class _OldmenulistState extends State<Oldmenulist> {
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(top: 45),
-                                      child: IconButton(
-                                        icon: Icon(Icons.search_rounded),
-                                        //リスト更新
-                                        onPressed: () => pastincrement(),
+                                      child: Row(
+                                        children: [
+                                          TextButton.icon(
+                                            label: Text("検索"),
+                                            icon: Icon(Icons.search_rounded, color: Colors.blue,),
+                                            //リスト更新
+                                            onPressed: () => pastincrement(),
+                                          ),
+                                        ],
                                       ),
                                     )
                                   ],
@@ -659,164 +927,186 @@ class _OldmenulistState extends State<Oldmenulist> {
                                     child: ListView.builder(
                                       itemCount: pastlistitem.length,
                                       itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(
-                                            pastlistitem[index]["menuname"],
-                                            style: TextStyle(color: Colors.white),
+                                        return Dismissible(
+                                          key: ObjectKey(pastlistitem[index]["id"]),
+                                          background: Container(
+                                            color: Colors.red,
                                           ),
-                                          subtitle: Text(
-                                            pastlistitem[index]["datetime"],
-                                            style:
-                                                TextStyle(color: Colors.white60),
-                                          ),
-                                          trailing: Text(
-                                            pastlistitem[index]["menucal"]
-                                                    .toString() +
-                                                "kCal",
-                                            style: TextStyle(color: Colors.white),
-                                          ),
-                                          onTap: () async {
-                                            //食品名の初期値設定
-                                            menuController.text = pastlistitem[index]["menuname"];
-
-                                            //カロリーの初期値設定
-                                            calController.text = pastlistitem[index]["menucal"].toString();
-
-
-                                            //ダイアログの表示
-                                            var dialog = await showGeneralDialog(
-                                              barrierColor: Colors.black.withOpacity(0.5),
-                                              transitionDuration: Duration(milliseconds: 200),
-                                              context: context,
-                                              barrierDismissible: true,
-                                              barrierLabel: "",
-                                              transitionBuilder: (context, a1, a2, widget) {
-                                                return Transform.scale(
-                                                  scale: a1.value,
-                                                  child: Dialog(
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(4.0)
-                                                    ),
-                                                    child: Stack(
-                                                      overflow: Overflow.visible,
-                                                      alignment: Alignment.topCenter,
-                                                      children: [
-                                                        FutureBuilder(
-                                                          future: Todo().select().toList(),
-                                                          builder: (context, snapshot) {
-                                                            if(snapshot.hasData){
-                                                              var i = snapshot.data;
-                                                              return Container(
-                                                                height: screenheight - 200,
-                                                                child: Padding(
-                                                                  padding: const EdgeInsets.fromLTRB(10, 70, 10, 10),
-                                                                  child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                    children: [
-                                                                      TextFormField(
-                                                                        controller: menuController,
-                                                                        maxLength: 50,
-                                                                        decoration: const InputDecoration(
-                                                                          border: OutlineInputBorder(),
-                                                                          labelText: "メニュー名"
-                                                                        ),
-                                                                      ),
-                                                                      TextFormField(
-                                                                        controller: calController,
-                                                                        keyboardType: TextInputType.number,
-                                                                        maxLength: 4,
-                                                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                                                        decoration: const InputDecoration(
-                                                                          border: OutlineInputBorder(),
-                                                                          labelText: "カロリー"
-                                                                        ),
-                                                                      ),
-                                                                      Row(
-                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                        children: [
-                                                                          TextButton(
-                                                                            child: Text("キャンセル"),
-                                                                            onPressed: () => Navigator.of(context).pop(),
-                                                                          ),
-                                                                          ElevatedButton(
-                                                                            onPressed: () async{
-                                                                            //入力後のデータ
-                                                                            int id = pastlistitem[index]["id"];
-                                                                            String aftermenuname = menuController.text;
-                                                                            int aftermenucal = int.parse(calController.text);
-                                                                            
-                                                                            //リストの更新
-                                                                            pastlistitem[index]["menuname"] = menuController.text;
-                                                                            pastlistitem[index]["menucal"] = int.parse(calController.text);
-
-                                                                            //入力後のトータルカロリーの再計算
-                                                                            int tmp = 0;
-                                                                            pastlistitem.forEach((element) {
-                                                                              tmp += element["menucal"];
-                                                                            });
-
-                                                                            todaycount.setCol(tmp);
-
-                                                                            //id取得
-                                                                            var p1 = await Todo().select().date.contains(_date.month.toString() +'/' + _date.day.toString()).toList();
-                                                                            var x1 = p1[p1.length - 1].toMap();
-                                                                            var getid = x1['id'];
-
-                                                                            //Summaryに表示されるDBの更新                                                      
-                                                                            await Todo(id: getid, cal: todaycount.getCol(), date: _date.month.toString() + '/' + _date.day.toString(), year: _date.year.toString()).save();
-                                                                            
-                                                                            
-                                                                            //食べたもののDB更新
-                                                                            await _update(id, aftermenuname, aftermenucal);
-                                                                            
-                                                                      
-                                                                            //snackBarの表示
-                                                                            _scaffoldKey.currentState.showSnackBar(
-                                                                              SnackBar(
-                                                                                content: Text("変更しました。"),
-                                                                                duration: const Duration(seconds: 5),
-                                                                                action: SnackBarAction(
-                                                                                  label: "OK",
-                                                                                  onPressed: () {
-                                                                                    //snackbarのOKボタンを押したときの動作
-                                                                                    //特になし
-                                                                                  },
-                                                                                ),
-                                                                              )
-                                                                            );
-                                                                            
-                                                                            //ダイアログを閉じる
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                            child: Text('変更する', style: TextStyle(color: Colors.white),),
-                                                                          ),
-                                                                        ],
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }else{
-                                                              return CircularProgressIndicator();
-                                                            }
-                                                          },
-                                                          
-                                                        ),
-                                                        Positioned(
-                                                          top: -60,
-                                                          child: CircleAvatar(
-                                                            backgroundColor: Color(0xffFFA000),
-                                                            radius: 60,
-                                                            child: Icon(Icons.refresh, color: Colors.white, size: 50,),
-                                                          )
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ),
-                                                );
-                                              }, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {  },
-                                            );
+                                          confirmDismiss: (direction) async{
+                                            switch(direction) {
+                                              case DismissDirection.endToStart:
+                                                return await _showConfirmationPastDialog(context, pastlistitem[index]["menuname"], index, pastlistitem[index]["id"], _date.month.toString() +'/' + _date.day.toString(), _date.year.toString()) == true;
+                                              case DismissDirection.startToEnd:
+                                                return await _showConfirmationPastDialog(context, pastlistitem[index]["menuname"], index, pastlistitem[index]["id"], _date.month.toString() +'/' + _date.day.toString(), _date.year.toString()) == true;
+                                              case DismissDirection.horizontal:
+                                              case DismissDirection.vertical:
+                                              case DismissDirection.up:
+                                              case DismissDirection.down:
+                                                assert(false);
+                                                break;
+                                              case DismissDirection.none:
+                                            }
+                                            return false;
                                           },
+                                          child: ListTile(
+                                            title: Text(
+                                              pastlistitem[index]["menuname"],
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            subtitle: Text(
+                                              pastlistitem[index]["datetime"],
+                                              style:
+                                                  TextStyle(color: Colors.white60),
+                                            ),
+                                            trailing: Text(
+                                              pastlistitem[index]["menucal"]
+                                                      .toString() +
+                                                  "kCal",
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            onTap: () async {
+                                              //食品名の初期値設定
+                                              menuController.text = pastlistitem[index]["menuname"];
+
+                                              //カロリーの初期値設定
+                                              calController.text = pastlistitem[index]["menucal"].toString();
+
+
+                                              //ダイアログの表示
+                                              var dialog = await showGeneralDialog(
+                                                barrierColor: Colors.black.withOpacity(0.5),
+                                                transitionDuration: Duration(milliseconds: 200),
+                                                context: context,
+                                                barrierDismissible: true,
+                                                barrierLabel: "",
+                                                transitionBuilder: (context, a1, a2, widget) {
+                                                  return Transform.scale(
+                                                    scale: a1.value,
+                                                    child: Dialog(
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(4.0)
+                                                      ),
+                                                      child: Stack(
+                                                        overflow: Overflow.visible,
+                                                        alignment: Alignment.topCenter,
+                                                        children: [
+                                                          FutureBuilder(
+                                                            future: Todo().select().toList(),
+                                                            builder: (context, snapshot) {
+                                                              if(snapshot.hasData){
+                                                                var i = snapshot.data;
+                                                                return Container(
+                                                                  height: screenheight - 200,
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.fromLTRB(10, 70, 10, 10),
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                      children: [
+                                                                        TextFormField(
+                                                                          controller: menuController,
+                                                                          maxLength: 50,
+                                                                          decoration: const InputDecoration(
+                                                                            border: OutlineInputBorder(),
+                                                                            labelText: "メニュー名"
+                                                                          ),
+                                                                        ),
+                                                                        TextFormField(
+                                                                          controller: calController,
+                                                                          keyboardType: TextInputType.number,
+                                                                          maxLength: 4,
+                                                                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                                          decoration: const InputDecoration(
+                                                                            border: OutlineInputBorder(),
+                                                                            labelText: "カロリー"
+                                                                          ),
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                          children: [
+                                                                            TextButton(
+                                                                              child: Text("キャンセル"),
+                                                                              onPressed: () => Navigator.of(context).pop(),
+                                                                            ),
+                                                                            ElevatedButton(
+                                                                              onPressed: () async{
+                                                                              //入力後のデータ
+                                                                              int id = pastlistitem[index]["id"];
+                                                                              String aftermenuname = menuController.text;
+                                                                              int aftermenucal = int.parse(calController.text);
+                                                                              
+                                                                              //リストの更新
+                                                                              pastlistitem[index]["menuname"] = menuController.text;
+                                                                              pastlistitem[index]["menucal"] = int.parse(calController.text);
+
+                                                                              //入力後のトータルカロリーの再計算
+                                                                              int tmp = 0;
+                                                                              pastlistitem.forEach((element) {
+                                                                                tmp += element["menucal"];
+                                                                              });
+
+                                                                              pastcount.setCol(tmp);
+
+                                                                              //id取得
+                                                                              var p1 = await Todo().select().date.contains(_date.month.toString() +'/' + _date.day.toString()).toList();
+                                                                              var x1 = p1[p1.length - 1].toMap();
+                                                                              var getid = x1['id'];
+
+                                                                              //Summaryに表示されるDBの更新                                                      
+                                                                              await Todo(id: getid, cal: pastcount.getCol(), date: _date.month.toString() + '/' + _date.day.toString(), year: _date.year.toString()).save();
+                                                                              
+                                                                              
+                                                                              //食べたもののDB更新
+                                                                              await _update(id, aftermenuname, aftermenucal);
+                                                                              
+                                                                        
+                                                                              //snackBarの表示
+                                                                              _scaffoldKey.currentState.showSnackBar(
+                                                                                SnackBar(
+                                                                                  content: Text("変更しました。"),
+                                                                                  duration: const Duration(seconds: 5),
+                                                                                  action: SnackBarAction(
+                                                                                    label: "OK",
+                                                                                    onPressed: () {
+                                                                                      //snackbarのOKボタンを押したときの動作
+                                                                                      //特になし
+                                                                                    },
+                                                                                  ),
+                                                                                )
+                                                                              );
+                                                                              
+                                                                              //ダイアログを閉じる
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                              child: Text('変更する', style: TextStyle(color: Colors.white),),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }else{
+                                                                return CircularProgressIndicator();
+                                                              }
+                                                            },
+                                                            
+                                                          ),
+                                                          Positioned(
+                                                            top: -60,
+                                                            child: CircleAvatar(
+                                                              backgroundColor: Color(0xffFFA000),
+                                                              radius: 60,
+                                                              child: Icon(Icons.refresh, color: Colors.white, size: 50,),
+                                                            )
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ),
+                                                  );
+                                                }, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {  },
+                                              );
+                                            },
+                                          ),
                                         );
                                       },
                                     ),
@@ -871,12 +1161,12 @@ class _OldmenulistState extends State<Oldmenulist> {
                           model.updateIndex(index);
 
                           pageController.animateToPage(index,
-                              duration: Duration(milliseconds: 1000),
+                              duration: Duration(milliseconds: 400),
                               curve: Curves.easeInOutQuart);
                           print("test" + index.toString());
                         },
                         child: AnimatedContainer(
-                          duration: Duration(milliseconds: 1000),
+                          duration: Duration(milliseconds: 400),
                           decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(model.dotSize / 2),
@@ -900,6 +1190,8 @@ class _OldmenulistState extends State<Oldmenulist> {
     calController.dispose();
     super.dispose();
   }
+
+  
 
 
   Future<Null> _selectDate(BuildContext context) async {

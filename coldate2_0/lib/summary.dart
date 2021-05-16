@@ -158,7 +158,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                         ),
                                         Container(
                                           margin: EdgeInsets.only(top: 24),
-                                          child: Text("履歴")
+                                          child: Text("履歴確認")
                                         )
                                       ],
                                     )),

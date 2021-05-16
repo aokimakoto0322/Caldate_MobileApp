@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:coldate2_0/home_model.dart';
-import 'package:coldate2_0/main.dart';
 import 'package:coldate2_0/models.dart';
-import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'Groval.dart';
 import 'card.dart';
 import 'colcounter.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'DatabaseHelper.dart';
 
@@ -1179,6 +1176,159 @@ class _OldmenulistState extends State<Oldmenulist> {
               })),
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              DateTime _changedDate = DateTime.now();
+              var _changeController = TextEditingController();
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Scaffold(
+                    backgroundColor: Colors.transparent.withOpacity(0.5),
+                    body: StatefulBuilder(
+                      builder: (context, setState) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Text(
+                                '追加する日',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                  decoration:TextDecoration.none,
+                                  fontWeight:FontWeight.bold
+                                ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              FlatButton.icon(
+                                icon: Icon(
+                                  Icons.calendar_today,
+                                  color: Colors.white,
+                                ),
+                                label: Text(
+                                  _changedDate.year.toString() +'年' +_changedDate.month.toString() +'月' +_changedDate.day.toString() +'日',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  final DateTime picked =
+                                      await showDatePicker(
+                                          context: context,
+                                          initialDate: _changedDate,
+                                          firstDate: DateTime(2020),
+                                          lastDate: DateTime.now().add(Duration(days:360))
+                                      );
+                                  if (picked != null) {
+                                    setState(() {
+                                      _changedDate = picked;
+                                    });
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 100,
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 10, left: 50, right: 50),
+                                child: TextFormField(
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                  controller: _changeController,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 4,
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                  decoration: const InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.white
+                                      )
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.white
+                                      )
+                                    ),
+                                    labelText: "追加するカロリー",
+                                    labelStyle: TextStyle(
+                                      color: Colors.white
+                                    )
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async{ 
+                                  //過去Summaryに表示するDBの取得
+                                  var p1 = await Todo().select().date.contains(_changedDate.month.toString() +'/' + _changedDate.day.toString()).toList();
+                                  
+                                  if(p1.length == 0){
+                                    //Summaryに何もレコードが無い場合
+                                    //Todo(cal: int.parse(_changeController.text), date: _changedDate.month.toString() + '/' + _changedDate.day.toString(), year: _changedDate.year.toString()).save();
+                                  }else{
+                                    //Summaryに何もレコードがある場合
+                                    //id取得
+                                    var x1 = p1[p1.length - 1].toMap();
+                                    var getid = x1['id'];
+                                    
+                                    //対象日のカロリーを取得し、追加するカロリーに追加
+                                    var tmpcal = x1["cal"] + int.parse(_changeController.text);
+
+                                    //summaryのDBをUPDATE
+                                    Todo(id: getid, cal: tmpcal, date: _changedDate.month.toString() + '/' + _changedDate.day.toString(), year: _changedDate.year.toString()).save();
+                                    print(_changedDate.month.toString() + '/' + _changedDate.day.toString());
+                                  }
+                                  
+                                  //OldmenulistのDBをUPDATE
+                                  _insert(int.parse(_changeController.text), _changedDate);
+
+                                  //ダイアログを閉じる
+                                  Navigator.of(context).pop();
+
+                                  //snackBarの表示
+                                  _scaffoldKey.currentState.showSnackBar(
+                                    SnackBar(
+                                      content: Text("追加しました。"),
+                                      duration: const Duration(seconds: 5),
+                                      action: SnackBarAction(
+                                        label: "OK",
+                                        onPressed: () {
+                                          //snackbarのOKボタンを押したときの動作
+                                          //特になし
+                                        },
+                                      ),
+                                    )
+                                  );
+                                },
+                                child: Text("追加する"),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       );
     });
@@ -1189,6 +1339,18 @@ class _OldmenulistState extends State<Oldmenulist> {
     menuController.dispose();
     calController.dispose();
     super.dispose();
+  }
+
+  //食べたものリストのINSERT
+  void _insert(int cal, DateTime tmpdate) async {
+    Map<String, dynamic> row = {
+      DatabaseHelper.date: DateFormat('yyyy-MM-dd').format(tmpdate),
+      DatabaseHelper.datetime: DateFormat('HH:mm').format(tmpdate),
+      DatabaseHelper.menuname: "手入力",
+      DatabaseHelper.menucal: cal,
+    };
+    await dbHelper.insert(row);
+    print("INSERT成功");
   }
 
   

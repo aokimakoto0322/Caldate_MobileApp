@@ -1,13 +1,15 @@
+import 'package:coldate2_0/DatabaseHelper.dart';
 import 'package:coldate2_0/database.dart';
 import 'package:coldate2_0/metabo.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:image_picker/image_picker.dart';
+import 'colcounter.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
 import 'indicator.dart';
 
-import 'models.dart';
 
 class Piechart extends StatefulWidget {
   @override
@@ -24,6 +26,11 @@ class _PiechartState extends State<Piechart> {
 
   var _metaboResult;
   var _metaboResultText;
+
+  var now = DateTime.now();
+  colcounter _col = colcounter();
+
+  
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -44,12 +51,22 @@ class _PiechartState extends State<Piechart> {
                         color: Colors.white.withOpacity(snapshot.data.toDouble())
                       ),
                       child: FutureBuilder(
-                        future: Todo().select().toList(),
+                        future: _query(),
                         builder: (context, snapshot) {
                           if(snapshot.hasData){
-                            var todaycal = snapshot.data;
                             try{
-                              todaycal2 = todaycal[todaycal.length - 1].toMap();
+                              //今日の総カロリーを計算
+                              //queryList
+                              List<Map<String, dynamic>> listitem = snapshot.data;
+                              var tmp0 = 0;
+
+                              listitem.forEach((element) { 
+                                if(element["date"] == DateFormat('yyyy-MM-dd').format(now)){
+                                  tmp0 += element["menucal"];
+                                  _col.setCol(tmp0);
+                                }
+                              });
+                              //*計算終わり */
                             }catch(e){
                               _todaycalresult = 1.0;
                               _todaycalresulttext = '未計測';
@@ -64,14 +81,13 @@ class _PiechartState extends State<Piechart> {
                                 var i = snapshot.data;
                                 var g;
                                 try{
-                                  
-                                  _todaycalresult = todaycal2['cal'].toDouble();
+                                  _todaycalresult = _col.getCol();
                                   g = i[i.length - 1].toMap();
-                                  _metaboResult = g['meta'].toDouble() - todaycal2['cal'].toDouble();
+                                  _metaboResult = g['meta'].toDouble() - _col.getCol().toDouble();
 
-                                  var rad = todaycal2['cal'] / g['meta'] * 100;
+                                  var rad = _col.getCol().toDouble() / g['meta'] * 100;
                                   _todaycalresulttextrad = rad.toStringAsFixed(1) + '%';
-                                  _todaycalresulttext = todaycal2['cal'].toString() + 'kCal' + '\n' + _todaycalresulttextrad;
+                                  _todaycalresulttext = _col.getCol().toString() + 'kCal' + '\n' + _todaycalresulttextrad;
                                   
 
                                   _metaboResultText = _metaboResult.toStringAsFixed(0);
@@ -114,7 +130,7 @@ class _PiechartState extends State<Piechart> {
                                         case 1:
                                           return PieChartSectionData(
                                             color: const Color(0xffa18cd1),
-                                            value: _todaycalresult,
+                                            value: _col.getCol().toDouble(),
                                             title: _todaycalresulttext,
                                             radius: radius,
                                             titleStyle: TextStyle(
@@ -178,6 +194,14 @@ class _PiechartState extends State<Piechart> {
         ],
       ),
     );
+  }
+
+  //DBHelperの設定
+  final dbHelper = DatabaseHelper.instance;
+
+  //食べ物リストからすべてのクエリ選択※一週間のクエリ取得の改善の余地あり
+  Future<List<Map<String, dynamic>>> _query() async {
+    return await dbHelper.queryAllRows();
   }
 
 

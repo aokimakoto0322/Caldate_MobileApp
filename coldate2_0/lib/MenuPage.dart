@@ -7,8 +7,6 @@ import 'Mesi.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 
-import 'models.dart';
-
 const MethodChannel _channel = const MethodChannel('package/coldate');
 
 //DBHelperの設定
@@ -125,38 +123,6 @@ class _MenuPageState extends State<MenuPage> {
             color: Colors.white,
           ),
           onPressed: () async {
-            final pl = await Todo().select().toList();
-            if (pl.length == 0) {
-              Todo(
-                      cal: mesicalsub,
-                      date: now.month.toString() + '/' + now.day.toString(),
-                      year: now.year.toString())
-                  .save();
-              
-            } else {
-              var x1 = pl[pl.length - 1].toMap();
-              var x2 = x1['cal'];
-              x2 += mesicalsub;
-              //methodchannel
-              _channel.invokeMethod('test', x2.toString());
-
-              if (x1['date'] ==
-                  now.month.toString() + '/' + now.day.toString()) {
-                Todo(
-                        id: x1['id'],
-                        cal: x2,
-                        date: now.month.toString() + '/' + now.day.toString(),
-                        year: now.year.toString())
-                    .save();
-              } else {
-                Todo(
-                        cal: mesicalsub,
-                        date: now.month.toString() + '/' + now.day.toString(),
-                        year: now.year.toString())
-                    .save();
-              }
-            }
-
             //配列にたまったデータをDBにINSERT
             mesiarray.forEach((element) {
               _insert(element["mesiname"], element["mesical"]);

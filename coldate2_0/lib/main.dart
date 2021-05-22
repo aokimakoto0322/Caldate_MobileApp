@@ -15,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:supercharged/supercharged.dart';
-import 'models.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
@@ -24,13 +23,11 @@ var flag = true;
 var arrow = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final bool isInitialized = await TodoDbModel().initializeDB();
-  if (isInitialized == true) {
-    myInterstitial2.load();
-    myInterstitial.load();
-    mybanner.load();
-    runApp(MyApp());
-  }
+  myInterstitial2.load();
+  myInterstitial.load();
+  mybanner.load();
+  runApp(MyApp());
+  
 }
 
 class MyApp extends StatefulWidget {

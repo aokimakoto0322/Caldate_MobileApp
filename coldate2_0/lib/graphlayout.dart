@@ -1,13 +1,14 @@
-import 'package:coldate2_0/Alldate.dart';
 import 'package:coldate2_0/Mainmenutab.dart';
 import 'package:coldate2_0/Oldmenulist.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Animations/FadeAnimations.dart';
-import 'models.dart';
+import 'colcounter.dart';
 import 'main.dart';
+import 'DatabaseHelper.dart';
 
 class graphlayout extends StatefulWidget {
   @override
@@ -19,8 +20,14 @@ class _GraphState extends State<graphlayout>
   var p1, p2, p3, p4, p5, p6, p7;
   List<BarChartGroupData> data = [];
   var width = 15.0;
-  DateTime _changedDate = new DateTime.now();
+  DateTime _changedDate = DateTime.now();
   var _changeController = TextEditingController();
+
+  //DBHelperのインスタンス生成
+  final dbHelper = DatabaseHelper.instance;
+
+  //過去日付選択
+  DateTime _date = DateTime.now();
 
   bool isTouched = false;
 
@@ -40,15 +47,49 @@ class _GraphState extends State<graphlayout>
     return pref.getDouble('BackgroundOpacity') ?? 1;
   }
 
+  //食べ物リストからすべてのクエリ選択※一週間のクエリ取得の改善の余地あり
+  Future<List<Map<String, dynamic>>> _query() async {
+    return await dbHelper.queryAllRows();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
 
-    final InterstitialAd myInterstitial2 = InterstitialAd(
-      adUnitId: 'ca-app-pub-8627512781946422/2312420457',
-      request: AdRequest(),
-      listener: AdListener(),
-    );
+    //今日の日時
+    DateTime now = DateTime.now();
+    //今日食べたもののリストの初期化
+    var todaycount = colcounter();
+
+    //昨日の日時
+    DateTime yesterday = now.add(Duration(days: 1) * -1);
+    //昨日のカウンタ
+    var yesterdaycount = colcounter();
+
+    //二日前
+    DateTime twodayago = now.add(Duration(days: 1) * -2);
+    //二日前食べたもののリストの初期化
+    var twodaycount = colcounter();
+
+    //三日前
+    DateTime threedayago = now.add(Duration(days: 1) * -3);
+    //三日前食べたもののリストの初期化
+    var threedaycount = colcounter();
+
+    //四日前
+    DateTime fourdayago = now.add(Duration(days: 1) * -4);
+    //四日前食べたもののリストの初期化
+    var fourdaycount = colcounter();
+
+    //五日前
+    DateTime fivedayago = now.add(Duration(days: 1) * -5);
+    //五日前食べたもののリストの初期化
+    var fivedaycount = colcounter();
+
+    //六日前
+    DateTime sixdayago = now.add(Duration(days: 1) * -6);
+    //六日前食べたもののリストの初期化
+    var sixdaycount = colcounter();
+
 
     return FutureBuilder(
         future: _getOpacity(),
@@ -71,639 +112,233 @@ class _GraphState extends State<graphlayout>
                             margin: EdgeInsets.only(top: 10, left: 5),
                             height: 500,
                             child: FutureBuilder(
-                              future: Todo().select().toList(),
+                              future: _query(),
                               builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  try {
-                                    var i = snapshot.data;
-                                    p1 = i[i.length - 1].toMap();
-                                    if (i.length == 1) {
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                      ];
-                                    } else if (i.length == 2) {
-                                      p2 = i[i.length - 2].toMap();
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 1,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p2['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                      ];
-                                    } else if (i.length == 3) {
-                                      p2 = i[i.length - 2].toMap();
-                                      p3 = i[i.length - 3].toMap();
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p3['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 1,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p2['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 2,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ])
-                                      ];
-                                    } else if (i.length == 4) {
-                                      p2 = i[i.length - 2].toMap();
-                                      p3 = i[i.length - 3].toMap();
-                                      p4 = i[i.length - 4].toMap();
+                                if(snapshot.hasData){
+                                  try{
+                                    //その日食べた総カロリーの取得
+                                    //すべてのリスト
+                                    List<Map<String, dynamic>> list = snapshot.data;
 
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p4['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 1,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p3['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 2,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p2['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 3,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ])
-                                      ];
-                                    } else if (i.length == 5) {
-                                      p2 = i[i.length - 2].toMap();
-                                      p3 = i[i.length - 3].toMap();
-                                      p4 = i[i.length - 4].toMap();
-                                      p5 = i[i.length - 5].toMap();
+                                    //各日のtmp
+                                    var tmp0 = 0;
+                                    var tmp1 = 0;
+                                    var tmp2 = 0;
+                                    var tmp3 = 0;
+                                    var tmp4 = 0;
+                                    var tmp5 = 0;
+                                    var tmp6 = 0;
 
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p5['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p4['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 1,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p3['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 2,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p2['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 3,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ])
-                                      ];
-                                    } else if (i.length == 6) {
-                                      p2 = i[i.length - 2].toMap();
-                                      p3 = i[i.length - 3].toMap();
-                                      p4 = i[i.length - 4].toMap();
-                                      p5 = i[i.length - 5].toMap();
-                                      p6 = i[i.length - 6].toMap();
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p6['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p5['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p4['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 1,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p3['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 2,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p2['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 3,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ])
-                                      ];
-                                    } else if (i.length == 7) {
-                                      p2 = i[i.length - 2].toMap();
-                                      p3 = i[i.length - 3].toMap();
-                                      p4 = i[i.length - 4].toMap();
-                                      p5 = i[i.length - 5].toMap();
-                                      p6 = i[i.length - 6].toMap();
-                                      p7 = i[i.length - 7].toMap();
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p7['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p6['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p5['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p4['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 1,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p3['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 2,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p2['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 3,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ])
-                                      ];
-                                    } else {
-                                      p2 = i[i.length - 2].toMap();
-                                      p3 = i[i.length - 3].toMap();
-                                      p4 = i[i.length - 4].toMap();
-                                      p5 = i[i.length - 5].toMap();
-                                      p6 = i[i.length - 6].toMap();
-                                      p7 = i[i.length - 7].toMap();
-                                      data = [
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p7['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p6['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p5['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 0,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p4['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 1,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p3['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 2,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p2['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ]),
-                                        BarChartGroupData(
-                                            x: 3,
-                                            barsSpace: 4,
-                                            barRods: [
-                                              BarChartRodData(
-                                                y: p1['cal'].toDouble(),
-                                                color: Color(0xffa18cd1),
-                                                width: width,
-                                              )
-                                            ])
-                                      ];
-                                    }
+                                    //すべてのリストから、過去7日のカロリー総計を算出
+                                    list.forEach((element) {
+                                      //今日のカロリー総計
+                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(now)){
+                                        tmp0 += element["menucal"];
+                                        todaycount.setCol(tmp0);
+                                      }
 
-                                    return BarChart(BarChartData(
-                                        alignment:
-                                            BarChartAlignment.spaceEvenly,
+                                      //昨日のカロリー総計
+                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(yesterday)){
+                                        tmp1 += element["menucal"];
+                                        yesterdaycount.setCol(tmp1);
+                                      }
+
+                                      //二日前
+                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(twodayago)){
+                                        tmp2 += element["menucal"];
+                                        twodaycount.setCol(tmp2);
+                                      }
+
+                                      //三日前
+                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(threedayago)){
+                                        tmp3 += element["menucal"];
+                                        threedaycount.setCol(tmp3);
+                                      }
+
+                                      //四日前
+                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(fourdayago)){
+                                        tmp4 += element["menucal"];
+                                        fourdaycount.setCol(tmp4);
+                                      }
+
+                                      //五日前
+                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(fivedayago)){
+                                        tmp5 += element["menucal"];
+                                        fivedaycount.setCol(tmp5);
+                                      }
+
+                                      //六日前
+                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(sixdayago)){
+                                        tmp6 += element["menucal"];
+                                        sixdaycount.setCol(tmp6);
+                                      }
+                                    });
+
+                                    //***カロリー総計計算終わり
+
+                                    //グラフに描画
+
+                                    data = [
+                                      //六日前
+                                      BarChartGroupData(
+                                        x: 0,
+                                        barsSpace: 4,
+                                        barRods: [
+                                          BarChartRodData(
+                                            y: sixdaycount.getCol().toDouble(),
+                                            color: Color(0xffa18cd1),
+                                            width: width,
+                                          )
+                                        ]
+                                      ),
+                                      //五日前
+                                      BarChartGroupData(
+                                        x: 0,
+                                        barsSpace: 4,
+                                        barRods: [
+                                          BarChartRodData(
+                                            y: fivedaycount.getCol().toDouble(),
+                                            color: Color(0xffa18cd1),
+                                            width: width,
+                                          )
+                                        ]
+                                      ),
+                                      //四日前
+                                      BarChartGroupData(
+                                        x: 0,
+                                        barsSpace: 4,
+                                        barRods: [
+                                          BarChartRodData(
+                                            y: fourdaycount.getCol().toDouble(),
+                                            color: Color(0xffa18cd1),
+                                            width: width,
+                                          )
+                                        ]
+                                      ),
+                                      //三日前
+                                      BarChartGroupData(
+                                        x: 1,
+                                        barsSpace: 4,
+                                        barRods: [
+                                          BarChartRodData(
+                                            y: threedaycount.getCol().toDouble(),
+                                            color: Color(0xffa18cd1),
+                                            width: width,
+                                          )
+                                        ]
+                                      ),
+                                      //二日前
+                                      BarChartGroupData(
+                                        x: 0,
+                                        barsSpace: 4,
+                                        barRods: [
+                                          BarChartRodData(
+                                            y: twodaycount.getCol().toDouble(),
+                                            color: Color(0xffa18cd1),
+                                            width: width,
+                                          )
+                                        ]
+                                      ),
+                                      //昨日
+                                      BarChartGroupData(
+                                        x: 0,
+                                        barsSpace: 4,
+                                        barRods: [
+                                          BarChartRodData(
+                                            y: yesterdaycount.getCol().toDouble(),
+                                            color: Color(0xffa18cd1),
+                                            width: width,
+                                          )
+                                        ]
+                                      ),
+                                      //今日
+                                      BarChartGroupData(
+                                        x: 0,
+                                        barsSpace: 4,
+                                        barRods: [
+                                          BarChartRodData(
+                                            y: todaycount.getCol().toDouble(),
+                                            color: Color(0xffa18cd1),
+                                            width: width,
+                                          )
+                                        ]
+                                      )
+                                    ];
+
+                                    return BarChart(
+                                      BarChartData(
+                                        alignment: BarChartAlignment.spaceEvenly,
                                         barTouchData: BarTouchData(
-                                            touchTooltipData:
-                                                BarTouchTooltipData(
-                                          maxContentWidth: 400,
-                                          getTooltipItem: (group, groupIndex,
-                                              rod, rodIndex) {
-                                            return BarTooltipItem(
+                                          touchTooltipData: BarTouchTooltipData(
+                                            maxContentWidth: 400,
+                                            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                              return BarTooltipItem(
                                                 rod.y.round().toString(),
                                                 TextStyle(
-                                                    color: Color(0xffa1c4fd),
-                                                    fontWeight:
-                                                        FontWeight.bold));
-                                          },
-                                        )),
+                                                  color: Color(0xffa1c4fd),
+                                                  fontWeight: FontWeight.bold
+                                                )
+                                              );
+                                            },
+                                          )
+                                        ),
                                         titlesData: FlTitlesData(
-                                            show: true,
-                                            bottomTitles: SideTitles(
-                                                showTitles: true,
-                                                margin: 10,
-                                                textStyle: TextStyle(
-                                                    color: Color(0xffa18cd1),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                getTitles: (double value) {
-                                                  if (i.length == 1) {
-                                                    switch (value.toInt()) {
-                                                      case 0:
-                                                        return p1['date'];
-                                                    }
-                                                  } else if (i.length == 2) {
-                                                    p2 =
-                                                        i[i.length - 2].toMap();
-                                                    switch (value.toInt()) {
-                                                      case 1:
-                                                        return p1['date'];
-                                                      case 0:
-                                                        return p2['date'];
-                                                    }
-                                                  } else if (i.length == 3) {
-                                                    p2 =
-                                                        i[i.length - 2].toMap();
-                                                    p3 =
-                                                        i[i.length - 3].toMap();
-                                                    switch (value.toInt()) {
-                                                      case 2:
-                                                        return p1['date'];
-                                                      case 1:
-                                                        return p2['date'];
-                                                      case 0:
-                                                        return p3['date'];
-                                                    }
-                                                  } else if (i.length == 4) {
-                                                    p2 =
-                                                        i[i.length - 2].toMap();
-                                                    p3 =
-                                                        i[i.length - 3].toMap();
-                                                    p4 =
-                                                        i[i.length - 4].toMap();
-                                                    switch (value.toInt()) {
-                                                      case 3:
-                                                        return p1['date'];
-                                                      case 2:
-                                                        return p2['date'];
-                                                      case 1:
-                                                        return p3['date'];
-                                                      case 0:
-                                                        return p4['date'];
-                                                    }
-                                                  } else if (i.length == 5) {
-                                                    p2 =
-                                                        i[i.length - 2].toMap();
-                                                    p3 =
-                                                        i[i.length - 3].toMap();
-                                                    p4 =
-                                                        i[i.length - 4].toMap();
-                                                    p5 =
-                                                        i[i.length - 5].toMap();
-                                                    switch (value.toInt()) {
-                                                      case 4:
-                                                        return p1['date'];
-                                                      case 3:
-                                                        return p2['date'];
-                                                      case 2:
-                                                        return p3['date'];
-                                                      case 1:
-                                                        return p4['date'];
-                                                      case 0:
-                                                        return p5['date'];
-                                                    }
-                                                  } else if (i.length == 6) {
-                                                    p2 =
-                                                        i[i.length - 2].toMap();
-                                                    p3 =
-                                                        i[i.length - 3].toMap();
-                                                    p4 =
-                                                        i[i.length - 4].toMap();
-                                                    p5 =
-                                                        i[i.length - 5].toMap();
-                                                    p6 =
-                                                        i[i.length - 6].toMap();
-                                                    switch (value.toInt()) {
-                                                      case 5:
-                                                        return p1['date'];
-                                                      case 4:
-                                                        return p2['date'];
-                                                      case 3:
-                                                        return p3['date'];
-                                                      case 2:
-                                                        return p4['date'];
-                                                      case 1:
-                                                        return p5['date'];
-                                                      case 0:
-                                                        return p6['date'];
-                                                    }
-                                                  } else if (i.length == 7) {
-                                                    p2 =
-                                                        i[i.length - 2].toMap();
-                                                    p3 =
-                                                        i[i.length - 3].toMap();
-                                                    p4 =
-                                                        i[i.length - 4].toMap();
-                                                    p5 =
-                                                        i[i.length - 5].toMap();
-                                                    p6 =
-                                                        i[i.length - 6].toMap();
-                                                    p7 =
-                                                        i[i.length - 7].toMap();
-                                                    switch (value.toInt()) {
-                                                      case 6:
-                                                        return p1['date'];
-                                                      case 5:
-                                                        return p2['date'];
-                                                      case 4:
-                                                        return p3['date'];
-                                                      case 3:
-                                                        return p4['date'];
-                                                      case 2:
-                                                        return p5['date'];
-                                                      case 1:
-                                                        return p6['date'];
-                                                      case 0:
-                                                        return p7['date'];
-                                                    }
-                                                  } else {
-                                                    p2 =
-                                                        i[i.length - 2].toMap();
-                                                    p3 =
-                                                        i[i.length - 3].toMap();
-                                                    p4 =
-                                                        i[i.length - 4].toMap();
-                                                    p5 =
-                                                        i[i.length - 5].toMap();
-                                                    p6 =
-                                                        i[i.length - 6].toMap();
-                                                    p7 =
-                                                        i[i.length - 7].toMap();
-                                                    switch (value.toInt()) {
-                                                      case 6:
-                                                        return p1['date'];
-                                                      case 5:
-                                                        return p2['date'];
-                                                      case 4:
-                                                        return p3['date'];
-                                                      case 3:
-                                                        return p4['date'];
-                                                      case 2:
-                                                        return p5['date'];
-                                                      case 1:
-                                                        return p6['date'];
-                                                      case 0:
-                                                        return p7['date'];
-                                                    }
-                                                  }
-                                                }),
-                                            //左のタイトルを非表示
-                                            leftTitles: SideTitles(
-                                              showTitles: true,
-                                              textStyle: TextStyle(
-                                                  color: Color(0xffa18cd1),
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 10),
-                                              getTitles: (double value) {
-                                                return value.toInt().toString();
-                                              },
-                                              interval: 500,
-                                            )),
-                                        //枠線を非表示
+                                          show: true,
+                                          bottomTitles: SideTitles(
+                                            showTitles: true,
+                                            margin: 10,
+                                            textStyle: TextStyle(
+                                              color: Color(0xffa18cd1),
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                            getTitles: (value) {
+                                              switch (value.toInt()) {
+                                                case 6:
+                                                  return now.month.toString() + "/" + now.day.toString();
+                                                case 5:
+                                                  return yesterday.month.toString() + "/" + yesterday.day.toString();
+                                                case 4:
+                                                  return twodayago.month.toString() + "/" + twodayago.day.toString();
+                                                case 3:
+                                                  return threedayago.month.toString() + "/" + threedayago.day.toString();
+                                                case 2:
+                                                  return fourdayago.month.toString() + "/" + fourdayago.day.toString();
+                                                case 1:
+                                                  return fivedayago.month.toString() + "/" + fivedayago.day.toString();
+                                                case 0:
+                                                  return sixdayago.month.toString() + "/" + sixdayago.day.toString();
+                                              }
+                                            },
+                                          ),
+                                          //左のタイトルを非表示
+                                          leftTitles: SideTitles(
+                                            showTitles: true,
+                                            textStyle: TextStyle(
+                                                color: Color(0xffa18cd1),
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 10),
+                                            getTitles: (double value) {
+                                              return value.toInt().toString();
+                                            },
+                                            interval: 500,
+                                          ),
+                                        ),
                                         borderData: FlBorderData(
                                           show: false,
                                         ),
-                                        barGroups: data));
-                                  } catch (e) {
+                                        barGroups: data
+                                      )
+                                    );
+                                  }catch(e){
                                     return Text('保存されているデータがありません');
                                   }
-                                } else {
-                                  return Center(
-                                      child: CircularProgressIndicator());
+                                }else{
+                                  return CircularProgressIndicator();
                                 }
                               },
                             ),
                           )),
                     ),
-                    FadeAnimation(
-                        0.5,
-                        Container(
-                          margin: EdgeInsets.only(top: 30),
-                          child: Center(
-                            child: ElevatedButton(
-                              child: Text('過去データをグラフで見る'),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) {
-                                  return Alldate();
-                                }));
-                              },
-                            ),
-                          ),
-                        )),
                     SizedBox(
                       height: 150,
                     )
@@ -714,6 +349,7 @@ class _GraphState extends State<graphlayout>
           } else {
             return CircularProgressIndicator();
           }
-        });
+        }
+      );
   }
 }

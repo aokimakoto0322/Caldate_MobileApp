@@ -8,12 +8,11 @@ import 'package:intro_slider/slide_object.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Animations/FadeAnimations.dart';
 import 'Mainmenutab.dart';
-import 'models.dart';
 import 'colcounter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 
-colcounter _col = new colcounter();
+colcounter _col = colcounter();
 //メソッドチャンネルの設定
 const MethodChannel _channel = const MethodChannel('package/coldate');
 
@@ -164,72 +163,64 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                     )),
                                 Center(
                                   child: FadeAnimation(
-                                      0.2,
-                                      Container(
-                                        constraints: BoxConstraints.expand(),
-                                        child: FutureBuilder(
-                                            future: Todo().select().toList(),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasData) {
-                                                var i, p;
-                                                try {
-                                                  i = snapshot.data;
-                                                  p = i[i.length - 1].toMap();
-                                                  _col.setCol(p['cal']);
-                                                } catch (e) {
-                                                  return Text(
-                                                      'データが登録されていません');
-                                                }
-                                                return FlatButton(
-                                                  onPressed: (){
-                                                    myInterstitial2.show();
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => Mainmenutab()
-                                                      )
-                                                    );
-                                                  },
-                                                  textColor: Colors.white,
-                                                  padding: EdgeInsets.all(0),
-                                                  child: Container(
-                                                      padding:
-                                                          EdgeInsets.all(10),
-                                                      child: Text(
-                                                        (() {
-                                                          //DBにアクセスして、今日の日付とDB最新の日付と比較
-                                                          //DBに今日の日付が有ったら0と書く
+                                    0.2,
+                                    Container(
+                                      constraints: BoxConstraints.expand(),
+                                      child: FutureBuilder(
+                                        future: _query(),
+                                        builder: (context, snapshot) {
+                                          if(snapshot.hasData){
 
-                                                          if (p['date'] ==
-                                                              now.month
-                                                                      .toString() +
-                                                                  '/' +
-                                                                  now.day
-                                                                      .toString()) {
-                                                            return p['cal']
-                                                                    .toString() +
-                                                                'kCal';
-                                                          } else {
-                                                            _col.setCol(0);
-                                                            var nextday = now
-                                                                    .day
-                                                                    .toInt() +
-                                                                1;
-                                                            //Todo(id: p.length + 1, cal: 0, date: now.month.toString() + '/' + nextday.toString(), year: now.year.toString()).save();
-                                                            return '0kCal';
-                                                          }
-                                                        })(),
-                                                        style:
-                                                            GoogleFonts.lato(
-                                                                fontSize: 65),
+                                            try{
+                                              //今日の総カロリーを計算
+                                              //queryList
+                                              List<Map<String, dynamic>> listitem = snapshot.data;
+                                              var tmp0 = 0;
+
+                                              listitem.forEach((element) { 
+                                                if(element["date"] == DateFormat('yyyy-MM-dd').format(now)){
+                                                  tmp0 += element["menucal"];
+                                                  _col.setCol(tmp0);
+                                                }
+                                              });
+                                              //*計算終わり */
+
+                                              //ボタンに今日の総カロリーを表示
+                                              return FlatButton(
+                                                onPressed: (){
+                                                  myInterstitial2.show();
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => Mainmenutab()
                                                     )
+                                                  );
+                                                },
+                                                textColor: Colors.white,
+                                                padding: EdgeInsets.all(0),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Text(
+                                                    _col.getCol().toString() + "kCal",
+                                                    style: GoogleFonts.lato(
+                                                      fontSize: 65
+                                                    ),
                                                   ),
-                                                );
-                                              } else {
-                                                return CircularProgressIndicator();
-                                              }
-                                            }),
-                                      )),
+                                                ),
+
+                                              );
+
+
+                                            }catch(e){
+                                              return Text('データが登録されていません');
+                                            }
+                                          }else{
+                                            return CircularProgressIndicator();
+                                          }
+                                        },
+                                      ),
+                                    )
+                                  ),
                                 ),
                               ],
                             ),
@@ -240,7 +231,6 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                             if (snapshot.hasData) {
                               return Container(
                                 //透過の設定
-
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -396,7 +386,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                     //食べたものリストInsert
                                     _insert(sub);
 
-                                    final pl = await Todo().select().toList();
+                                    //アニメーション効果
                                     setState(() {
                                       var x = _col.getCol();
                                       x += sub;
@@ -410,49 +400,9 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                               parent: _controller));
                                       _controller.forward(from: 0.0);
                                       sub = 0;
-                                      //もしデータベースに何も入っていない場合(データベース内データ数参照
-
-                                      if (pl.length == 0) {
-                                        Todo(
-                                          cal: _col.getCol(),
-                                          date: now.month.toString() +
-                                              '/' +
-                                              now.day.toString(),
-                                          year: now.year.toString(),
-                                        ).save();
-                                      } else {
-                                        var p = pl[pl.length - 1].toMap();
-                                        if (now.month.toString() +
-                                                '/' +
-                                                now.day.toString() ==
-                                            p['date']) {
-                                          Todo(
-                                                  id: p['id'],
-                                                  cal: _col.getCol(),
-                                                  date: now.month.toString() +
-                                                      '/' +
-                                                      now.day.toString(),
-                                                  year: now.year.toString())
-                                              .save();
-                                        } else {
-                                          Todo(
-                                                  cal: _col.getCol(),
-                                                  date: now.month.toString() +
-                                                      '/' +
-                                                      now.day.toString(),
-                                                  year: now.year.toString())
-                                              .save();
-                                        }
-                                      }
-
+                                      
                                       //methodchannel
-                                      _channel.invokeMethod(
-                                          'test', _col.getCol().toString());
-
-                                      for (var x in pl) {
-                                        //print(x.toMap());
-                                      }
-                                      //print(pl.length);
+                                      _channel.invokeMethod('test', _col.getCol().toString());
                                     });
                                   }))),
                       SizedBox(
@@ -471,6 +421,11 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
 
   //DBHelperの設定
   final dbHelper = DatabaseHelper.instance;
+
+  //食べ物リストからすべてのクエリ選択※一週間のクエリ取得の改善の余地あり
+  Future<List<Map<String, dynamic>>> _query() async {
+    return await dbHelper.queryAllRows();
+  }
 
   //食べたものリストのINSERT
   void _insert(int cal) async {

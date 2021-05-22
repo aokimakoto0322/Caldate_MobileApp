@@ -763,13 +763,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-  source_gen:
-    dependency: transitive
-    description:
-      name: source_gen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.10+3"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -791,20 +784,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  sqfentity:
-    dependency: "direct main"
-    description:
-      name: sqfentity
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.0+1"
-  sqfentity_gen:
-    dependency: "direct main"
-    description:
-      name: sqfentity_gen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.0"
   sqflite:
     dependency: "direct main"
     description:
@@ -819,20 +798,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2+1"
-  sqflite_common_ffi:
-    dependency: transitive
-    description:
-      name: sqflite_common_ffi
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0+1"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   stack_trace:
     dependency: transitive
     description:

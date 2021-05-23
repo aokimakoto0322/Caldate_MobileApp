@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:coldate2_0/Mainmenutab.dart';
+
 import 'package:coldate2_0/Okotowari.dart';
 import 'package:coldate2_0/Piechart.dart';
 import 'package:coldate2_0/SettingPage.dart';
@@ -8,6 +8,8 @@ import 'package:coldate2_0/file_controller.dart';
 import 'package:coldate2_0/metabo.dart';
 import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'MenuPage.dart';
 import 'graphlayout.dart';
@@ -15,7 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:supercharged/supercharged.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
 int todaycal;
@@ -25,7 +26,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   myInterstitial2.load();
   myInterstitial.load();
-  mybanner.load();
+  
   runApp(MyApp());
   
 }
@@ -125,21 +126,6 @@ class Home extends StatelessWidget {
                               const Color(0xffa18cd1),
                               const Color(0xfffbc2eb)
                             ])),
-                          ),
-                          ListTile(
-                            title: Text("過去食べたものを見る"),
-                            onTap: () {
-                              myInterstitial2.show();
-                              //pushWithReload(context);
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Mainmenutab()));
-                            },
-                          ),
-                          ListTile(
-                            title: Text("メニュー一覧"),
-                            onTap: () {
-                              myInterstitial.show();
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
-                            },
                           ),
                           ListTile(
                             title: Text('設定'),
@@ -373,7 +359,7 @@ final InterstitialAd myInterstitial = InterstitialAd(
   listener: AdListener(),
 );
 
-final BannerAd mybanner = BannerAd(
+final BannerAd  mybanner = BannerAd(
     adUnitId: "ca-app-pub-8627512781946422/9988986141",
     size: AdSize.banner,
     request: AdRequest(),

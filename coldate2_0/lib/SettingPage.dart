@@ -187,13 +187,12 @@ class _SettingpageState extends State<Settingpage> {
   }
 
   void _getAndSaveImageFromDevice(ImageSource source) async {
-    var imageFile = await ImagePicker.pickImage(source: source);
+    var _picker = ImagePicker();
+    var imageFile = await _picker.getImage(source: source);
+    var savedFile = await FileController.saveLocalImage(File(imageFile.path));
     if (imageFile == null) {
       return;
     }
-
-    var savedFile = await FileController.saveLocalImage(imageFile);
-
     setState(() {
       this.imagefile = savedFile;
     });

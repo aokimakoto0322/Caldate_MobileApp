@@ -29,9 +29,8 @@ class _MenuPageState extends State<MenuPage> {
   var _controller = TextEditingController();
 
   Future<List<Mesi>> fetchNotes() async {
-    var url =
-        'https://raw.githubusercontent.com/aokimakoto0322/caldate/master/Mesilist.json';
-    var response = await http.get(url);
+    var url = 'https://raw.githubusercontent.com/aokimakoto0322/caldate/master/Mesilist.json';
+    var response = await http.get(Uri.parse(url));
 
     var notes = List<Mesi>();
 

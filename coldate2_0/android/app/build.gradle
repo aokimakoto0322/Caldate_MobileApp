@@ -44,6 +44,7 @@ android {
         targetSdkVersion 29
         versionCode 11
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {

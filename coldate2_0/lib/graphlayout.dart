@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Animations/FadeAnimations.dart';
 import 'colcounter.dart';
-import 'main.dart';
 import 'DatabaseHelper.dart';
 
 class graphlayout extends StatefulWidget {
@@ -30,7 +29,6 @@ class _GraphState extends State<graphlayout>
   @override
   void initState() {
     super.initState();
-    myInterstitial2.load();
   }
 
   @override
@@ -412,7 +410,7 @@ class _GraphState extends State<graphlayout>
                                           showTitles: true,
                                           margin: 10,
                                           textStyle: TextStyle(
-                                            color: Colors.white,
+                                            color: Colors.black54,
                                             fontWeight: FontWeight.bold
                                           ),
                                           getTitles: (value) {

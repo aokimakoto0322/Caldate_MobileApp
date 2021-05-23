@@ -37,7 +37,7 @@ dependencies:
   after_layout: ^1.0.7+2
   introduction_screen: ^1.0.7
   firebase_core: ^1.2.0
-  firebase_analytics: ^8.1.0
+  firebase_analytics: ^8.0.0
   flutter_swiper: ^1.1.6
   simple_animations: ^2.2.1
   supercharged: ^1.6.0

@@ -10,6 +10,7 @@ import 'package:coldate2_0/summary.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'MenuPage.dart';
 import 'graphlayout.dart';
@@ -95,150 +96,158 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        accentColor: Color(0xffa1c4fd),
-        primaryColor: Color(0xffa1c4fd),
-      ),
-      home: Stack(
-        children: <Widget>[
-          const Backgroundsetting(),
-          FutureBuilder(
-              future: _getOpacity(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return DefaultTabController(
-                    length: 4,
-                    child: Scaffold(
-                      backgroundColor: Colors.transparent,
-                      drawer: Drawer(
-                        child: ListView(
-                        padding: EdgeInsets.zero,
-                        children: <Widget>[
-                          DrawerHeader(
-                            child: Text(
-                              'Caldate\nMenu',
-                              style: TextStyle(fontSize: 20),
+    return FutureBuilder(
+      future: _getMainColor(),
+      builder: (context, snapshot) {
+        if(snapshot.hasData){
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              accentColor: HexColor(snapshot.data[0]),
+              primaryColor: HexColor(snapshot.data[1]),
+            ),
+            home: Stack(
+              children: <Widget>[
+                const Backgroundsetting(),
+                FutureBuilder(
+                    future: _getOpacity(),
+                    builder: (context, snapshotopacity) {
+                      if (snapshotopacity.hasData) {
+                        return DefaultTabController(
+                          length: 4,
+                          child: Scaffold(
+                            backgroundColor: Colors.transparent,
+                            drawer: Drawer(
+                              child: ListView(
+                              padding: EdgeInsets.zero,
+                              children: <Widget>[
+                                DrawerHeader(
+                                  child: Text(
+                                    'Caldate\nMenu',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(colors: <Color>[
+                                    HexColor(snapshot.data[0]),
+                                    HexColor(snapshot.data[1])
+                                  ])),
+                                ),
+                                ListTile(
+                                  title: Text('設定'),
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => Settingpage()));
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text('アプリについて'),
+                                  onTap: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => Okotowari()));
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text('情報'),
+                                  onTap: () {
+                                    showAboutDialog(
+                                        context: context,
+                                        applicationName: "Coldate",
+                                        applicationVersion: '3.6.0',
+                                        applicationLegalese: '2020 Coldate',
+                                        applicationIcon: Image.asset(
+                                            'assets/images/splashicon.png',
+                                            height: 50));
+                                  },
+                                )
+                              ]),
                             ),
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: <Color>[
-                              const Color(0xffa18cd1),
-                              const Color(0xfffbc2eb)
-                            ])),
-                          ),
-                          ListTile(
-                            title: Text('設定'),
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Settingpage()));
-                            },
-                          ),
-                          ListTile(
-                            title: Text('アプリについて'),
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Okotowari()));
-                            },
-                          ),
-                          ListTile(
-                            title: Text('情報'),
-                            onTap: () {
-                              showAboutDialog(
-                                  context: context,
-                                  applicationName: "Coldate",
-                                  applicationVersion: '3.0.0',
-                                  applicationLegalese: '2020 Coldate',
-                                  applicationIcon: Image.asset(
-                                      'assets/images/splashicon.png',
-                                      height: 50));
-                            },
+                            appBar: AppBar(
+                              //透過率の設定１
+                              backgroundColor: HexColor(snapshot.data[0]).withOpacity(snapshotopacity.data.toDouble()),
+                              title: Text('Caldate'),
+                              elevation: 0,
+                              bottom: PreferredSize(
+                                child: TabBar(
+                                  isScrollable: true,
+                                  tabs: <Widget>[
+                                    Container(
+                                      width: size.width / 4,
+                                      child: Tab(
+                                        child: Icon(Icons.home),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: size.width / 4,
+                                      child: Tab(
+                                        child: Icon(Icons.equalizer),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: size.width / 4,
+                                      child: Tab(
+                                        child: Icon(Icons.pie_chart),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: size.width / 4,
+                                      child: Tab(child: Icon(Icons.fastfood)),
+                                    )
+                                  ],
+                                ),
+                                preferredSize: Size.fromHeight(30.0),
+                              ),
+                            ),
+                            body: Stack(
+                              children: [
+                                TabBarView(
+                                  children: <Widget>[
+                                    Summary(),
+                                    graphlayout(),
+                                    Piechart(),
+                                    metabo(),
+                                  ],
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    child: adWidget,
+                                    width: mybanner.size.width.toDouble(),
+                                    height: mybanner.size.height.toDouble(),
+                                  ),
+                                )
+                              ],
+                            ),
+                            floatingActionButton: Container(
+                              margin: EdgeInsets.only(bottom: 55),
+                              child: FloatingActionButton.extended(
+                                onPressed: () {
+                                  myInterstitial.show();
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
+                                },
+                                label: Text(
+                                  "メニュー表",
+                                  style: TextStyle(
+                                    color: Colors.pink[100],
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                icon: const Icon(Icons.list, color: Colors.white),
+                                backgroundColor: HexColor(snapshot.data[1]),
+                              ),
+                            ),
                           )
-                        ]),
-                      ),
-                      appBar: AppBar(
-                        //透過率の設定１
-                        backgroundColor: Color(0xffa18cd1)
-                            .withOpacity(snapshot.data.toDouble()),
-                        title: Text('Caldate'),
-                        elevation: 0,
-                        bottom: PreferredSize(
-                          child: TabBar(
-                            isScrollable: true,
-                            tabs: <Widget>[
-                              Container(
-                                width: size.width / 4,
-                                child: Tab(
-                                  child: Icon(Icons.home),
-                                ),
-                              ),
-                              Container(
-                                width: size.width / 4,
-                                child: Tab(
-                                  child: Icon(Icons.equalizer),
-                                ),
-                              ),
-                              Container(
-                                width: size.width / 4,
-                                child: Tab(
-                                  child: Icon(Icons.pie_chart),
-                                ),
-                              ),
-                              Container(
-                                width: size.width / 4,
-                                child: Tab(child: Icon(Icons.fastfood)),
-                              )
-                            ],
-                          ),
-                          preferredSize: Size.fromHeight(30.0),
-                        ),
-                      ),
-                      body: Stack(
-                        children: [
-                          TabBarView(
-                            children: <Widget>[
-                              Summary(),
-                              graphlayout(),
-                              Piechart(),
-                              metabo(),
-                            ],
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              child: adWidget,
-                              width: mybanner.size.width.toDouble(),
-                              height: mybanner.size.height.toDouble(),
-                            ),
-                          )
-                        ],
-                      ),
-                      floatingActionButton: Container(
-                        margin: EdgeInsets.only(bottom: 55),
-                        child: FloatingActionButton.extended(
-                          onPressed: () {
-                            myInterstitial.show();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => MenuPage()));
-                          },
-                          label: Text(
-                            "メニュー表",
-                            style: TextStyle(
-                              color: Colors.pink[100],
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          icon: const Icon(Icons.list, color: Colors.white),
-                          backgroundColor: Colors.pink,
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return CircularProgressIndicator();
-                }
-              }),
-        ],
-      ),
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }),
+              ],
+            ),
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 
@@ -250,6 +259,10 @@ class Home extends StatelessWidget {
   _getBlur() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getDouble('Blur') ?? 0;
+  }
+  _getMainColor() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getStringList("ColorLis") ?? ["#a18cd1","#fbc2eb"];
   }
 }
 

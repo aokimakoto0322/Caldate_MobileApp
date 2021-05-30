@@ -3,6 +3,7 @@ import 'package:coldate2_0/main.dart';
 import 'package:coldate2_0/metabo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -107,316 +108,331 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
           future: _getOpacity(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Container(
-                decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(snapshot.data.toDouble())),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      ClipPath(
-                          clipper: MyClipper(),
-                          child: Container(
-                            height: size.height / 2.5,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  //透過率の設定２
-                                  colors: [
-                                    Color(0xffa18cd1).withOpacity(
-                                        snapshot.data.toDouble()),
-                                    Color(0xffc2e9fb).withOpacity(
-                                        snapshot.data.toDouble()),
-                                  ]),
-                            ),
-                            child: Stack(
-                              children: <Widget>[
-                                FadeAnimation(
-                                    0.1,
-                                    Row(
-                                      children: [
-                                        Container(
-                                          margin:
-                                              EdgeInsets.only(top: 30, left: 30),
-                                          child: Text(
-                                            now.month.toString() +
-                                                '/' +
-                                                now.day.toString() +
-                                                'の摂取カロリー',
-                                            style: GoogleFonts.notoSans(
-                                                fontSize: 25,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 30),
-                                          child: Icon(
-                                            Icons.speaker_notes_outlined
+              return FutureBuilder(
+                future: _getMainColor(),
+                builder: (context, snapshotcolor) {
+                  if(snapshotcolor.hasData){
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(snapshot.data.toDouble())),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            ClipPath(
+                                clipper: MyClipper(),
+                                child: Container(
+                                  height: size.height / 2.5,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        //透過率の設定２
+                                        colors: [
+                                          HexColor(snapshotcolor.data[0]).withOpacity(
+                                              snapshot.data.toDouble()),
+                                          HexColor(snapshotcolor.data[1]).withOpacity(
+                                              snapshot.data.toDouble()),
+                                        ]),
+                                  ),
+                                  child: Stack(
+                                    children: <Widget>[
+                                      FadeAnimation(
+                                          0.1,
+                                          Row(
+                                            children: [
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(top: 30, left: 30),
+                                                child: Text(
+                                                  now.month.toString() +
+                                                      '/' +
+                                                      now.day.toString() +
+                                                      'の摂取カロリー',
+                                                  style: GoogleFonts.notoSans(
+                                                      fontSize: 25,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(top: 30),
+                                                child: Icon(
+                                                  Icons.speaker_notes_outlined
+                                                )
+                                              ),
+                                              Container(
+                                                margin: EdgeInsets.only(top: 24),
+                                                child: Text("履歴確認")
+                                              )
+                                            ],
+                                          )),
+                                      Center(
+                                        child: FadeAnimation(
+                                          0.2,
+                                          Container(
+                                            constraints: BoxConstraints.expand(),
+                                            child: FutureBuilder(
+                                              future: _query(),
+                                              builder: (context, snapshot) {
+                                                if(snapshot.hasData){
+
+                                                  try{
+                                                    //今日の総カロリーを計算
+                                                    //queryList
+                                                    List<Map<String, dynamic>> listitem = snapshot.data;
+                                                    var tmp0 = 0;
+
+                                                    listitem.forEach((element) { 
+                                                      if(element["date"] == DateFormat('yyyy-MM-dd').format(now)){
+                                                        tmp0 += element["menucal"];
+                                                        _col.setCol(tmp0);
+                                                      }
+                                                    });
+                                                    //*計算終わり */
+
+                                                    //ボタンに今日の総カロリーを表示
+                                                    return FlatButton(
+                                                      onPressed: (){
+                                                        myInterstitial2.show();
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => Mainmenutab()
+                                                          )
+                                                        );
+                                                      },
+                                                      textColor: Colors.white,
+                                                      padding: EdgeInsets.all(0),
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(10),
+                                                        child: Text(
+                                                          _col.getCol().toString() + "kCal",
+                                                          style: GoogleFonts.lato(
+                                                            fontSize: 65
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                    );
+
+
+                                                  }catch(e){
+                                                    return Text('データが登録されていません');
+                                                  }
+                                                }else{
+                                                  return CircularProgressIndicator();
+                                                }
+                                              },
+                                            ),
                                           )
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 24),
-                                          child: Text("履歴確認")
-                                        )
-                                      ],
-                                    )),
-                                Center(
-                                  child: FadeAnimation(
-                                    0.2,
-                                    Container(
-                                      constraints: BoxConstraints.expand(),
-                                      child: FutureBuilder(
-                                        future: _query(),
-                                        builder: (context, snapshot) {
-                                          if(snapshot.hasData){
-
-                                            try{
-                                              //今日の総カロリーを計算
-                                              //queryList
-                                              List<Map<String, dynamic>> listitem = snapshot.data;
-                                              var tmp0 = 0;
-
-                                              listitem.forEach((element) { 
-                                                if(element["date"] == DateFormat('yyyy-MM-dd').format(now)){
-                                                  tmp0 += element["menucal"];
-                                                  _col.setCol(tmp0);
-                                                }
-                                              });
-                                              //*計算終わり */
-
-                                              //ボタンに今日の総カロリーを表示
-                                              return FlatButton(
-                                                onPressed: (){
-                                                  myInterstitial2.show();
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) => Mainmenutab()
-                                                    )
-                                                  );
-                                                },
-                                                textColor: Colors.white,
-                                                padding: EdgeInsets.all(0),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  child: Text(
-                                                    _col.getCol().toString() + "kCal",
-                                                    style: GoogleFonts.lato(
-                                                      fontSize: 65
-                                                    ),
-                                                  ),
-                                                ),
-
-                                              );
-
-
-                                            }catch(e){
-                                              return Text('データが登録されていません');
-                                            }
-                                          }else{
-                                            return CircularProgressIndicator();
-                                          }
-                                        },
                                       ),
-                                    )
+                                    ],
                                   ),
-                                ),
-                              ],
+                                )),
+                            FutureBuilder(
+                                future: _getOpacity(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Container(
+                                      //透過の設定
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          FadeAnimation(
+                                              0.3,
+                                              Container(
+                                                margin: EdgeInsets.only(bottom: 15),
+                                                padding: EdgeInsets.all(10),
+                                                child: GestureDetector(
+                                                  onLongPress: () {
+                                                    setState(() {
+                                                      sub = 0;
+                                                      _animation = new Tween<
+                                                                  double>(
+                                                              begin:
+                                                                  _animation.value,
+                                                              end: 0)
+                                                          .animate(new CurvedAnimation(
+                                                              curve: Curves
+                                                                  .fastLinearToSlowEaseIn,
+                                                              parent: _controller));
+                                                    });
+                                                    _controller.forward(from: 0.0);
+                                                  },
+                                                  child: AnimatedBuilder(
+                                                      animation: _animation,
+                                                      builder: (context, child) {
+                                                        return Text(
+                                                          _animation.value
+                                                              .toStringAsFixed(0),
+                                                          style: TextStyle(
+                                                              fontSize: 40,
+                                                              color:
+                                                                  Colors.black87),
+                                                        );
+                                                      }),
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return CircularProgressIndicator();
+                                  }
+                                }),
+                            SizedBox(
+                              height: 30,
                             ),
-                          )),
-                      FutureBuilder(
-                          future: _getOpacity(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Container(
-                                //透過の設定
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Column(
                                   children: <Widget>[
                                     FadeAnimation(
-                                        0.3,
-                                        Container(
-                                          margin: EdgeInsets.only(bottom: 15),
-                                          padding: EdgeInsets.all(10),
-                                          child: GestureDetector(
-                                            onLongPress: () {
-                                              setState(() {
-                                                sub = 0;
-                                                _animation = new Tween<
-                                                            double>(
-                                                        begin:
-                                                            _animation.value,
-                                                        end: 0)
-                                                    .animate(new CurvedAnimation(
-                                                        curve: Curves
-                                                            .fastLinearToSlowEaseIn,
-                                                        parent: _controller));
-                                              });
-                                              _controller.forward(from: 0.0);
-                                            },
-                                            child: AnimatedBuilder(
-                                                animation: _animation,
-                                                builder: (context, child) {
-                                                  return Text(
-                                                    _animation.value
-                                                        .toStringAsFixed(0),
-                                                    style: TextStyle(
-                                                        fontSize: 40,
-                                                        color:
-                                                            Colors.black87),
-                                                  );
-                                                }),
+                                        0.7,
+                                        RaisedButton(
+                                          textColor: Colors.black87,
+                                          child: Text(
+                                            '1',
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        )),
+                                          highlightElevation: 9,
+                                          highlightColor: Color(0xFFa1c4fd),
+                                          shape: StadiumBorder(),
+                                          onPressed: () {
+                                            setState(() {
+                                              sub += 1;
+                                              _animation = new Tween<double>(
+                                                begin: _animation.value,
+                                                end: sub.toDouble(),
+                                              ).animate(new CurvedAnimation(
+                                                  curve:
+                                                      Curves.fastLinearToSlowEaseIn,
+                                                  parent: _controller));
+                                            });
+                                            _controller.forward(from: 0.0);
+                                          },
+                                        ))
                                   ],
                                 ),
-                              );
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          }),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              FadeAnimation(
-                                  0.7,
-                                  RaisedButton(
-                                    textColor: Colors.black87,
-                                    child: Text(
-                                      '1',
-                                      style: TextStyle(
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    highlightElevation: 9,
-                                    highlightColor: Color(0xFFa1c4fd),
-                                    shape: StadiumBorder(),
-                                    onPressed: () {
-                                      setState(() {
-                                        sub += 1;
-                                        _animation = new Tween<double>(
-                                          begin: _animation.value,
-                                          end: sub.toDouble(),
-                                        ).animate(new CurvedAnimation(
-                                            curve:
-                                                Curves.fastLinearToSlowEaseIn,
-                                            parent: _controller));
-                                      });
-                                      _controller.forward(from: 0.0);
-                                    },
-                                  ))
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              FadeAnimation(
-                                  0.7,
-                                  RaisedButton(
-                                    textColor: Colors.black87,
-                                    child: Text(
-                                      '10',
-                                      style: TextStyle(
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    highlightColor: Colors.yellow[300],
-                                    highlightElevation: 9,
-                                    shape: StadiumBorder(),
-                                    onPressed: () {
-                                      buildSetState();
-                                      _controller.forward(from: 0.0);
-                                    },
-                                  ))
-                            ],
-                          ),
-                          Column(children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    FadeAnimation(
+                                        0.7,
+                                        RaisedButton(
+                                          textColor: Colors.black87,
+                                          child: Text(
+                                            '10',
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          highlightColor: Colors.yellow[300],
+                                          highlightElevation: 9,
+                                          shape: StadiumBorder(),
+                                          onPressed: () {
+                                            buildSetState();
+                                            _controller.forward(from: 0.0);
+                                          },
+                                        ))
+                                  ],
+                                ),
+                                Column(children: <Widget>[
+                                  FadeAnimation(
+                                      0.7,
+                                      RaisedButton(
+                                        textColor: Colors.black87,
+                                        child: Text(
+                                          '100',
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        highlightColor: Colors.red[300],
+                                        highlightElevation: 9,
+                                        shape: StadiumBorder(),
+                                        onPressed: () {
+                                          setState(() {
+                                            sub += 100;
+                                            _animation = new Tween<double>(
+                                              begin: _animation.value,
+                                              end: sub.toDouble(),
+                                            ).animate(new CurvedAnimation(
+                                                curve:
+                                                    Curves.fastLinearToSlowEaseIn,
+                                                parent: _controller));
+                                          });
+                                          _controller.forward(from: 0.0);
+                                        },
+                                      ))
+                                ])
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
                             FadeAnimation(
-                                0.7,
-                                RaisedButton(
-                                  textColor: Colors.black87,
-                                  child: Text(
-                                    '100',
-                                    style: TextStyle(
-                                        color: Colors.black54,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  highlightColor: Colors.red[300],
-                                  highlightElevation: 9,
-                                  shape: StadiumBorder(),
-                                  onPressed: () {
-                                    setState(() {
-                                      sub += 100;
-                                      _animation = new Tween<double>(
-                                        begin: _animation.value,
-                                        end: sub.toDouble(),
-                                      ).animate(new CurvedAnimation(
-                                          curve:
-                                              Curves.fastLinearToSlowEaseIn,
-                                          parent: _controller));
-                                    });
-                                    _controller.forward(from: 0.0);
-                                  },
-                                ))
-                          ])
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FadeAnimation(
-                          1,
-                          Container(
-                              margin: EdgeInsets.all(10),
-                              child: RaisedButton(
-                                  textColor: Colors.white,
-                                  padding: const EdgeInsets.all(0),
-                                  shape: StadiumBorder(),
-                                  color: Colors.deepPurple[200],
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text('今日の摂取カロリーに追加する'),
-                                  ),
-                                  onPressed: () async {
-                                    //食べたものリストInsert
-                                    _insert(sub);
+                                1,
+                                Container(
+                                    margin: EdgeInsets.all(10),
+                                    child: RaisedButton(
+                                        textColor: Colors.white,
+                                        padding: const EdgeInsets.all(0),
+                                        shape: StadiumBorder(),
+                                        color: HexColor(snapshotcolor.data[0]),
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          child: Text('今日の摂取カロリーに追加する'),
+                                        ),
+                                        onPressed: () async {
+                                          //食べたものリストInsert
+                                          _insert(sub);
 
-                                    //アニメーション効果
-                                    setState(() {
-                                      var x = _col.getCol();
-                                      x += sub;
-                                      _col.setCol(x);
+                                          //アニメーション効果
+                                          setState(() {
+                                            var x = _col.getCol();
+                                            x += sub;
+                                            _col.setCol(x);
 
-                                      _animation = new Tween<double>(
-                                              begin: _animation.value, end: 0)
-                                          .animate(new CurvedAnimation(
-                                              curve: Curves
-                                                  .fastLinearToSlowEaseIn,
-                                              parent: _controller));
-                                      _controller.forward(from: 0.0);
-                                      sub = 0;
-                                      
-                                      //methodchannel
-                                      _channel.invokeMethod('test', _col.getCol().toString());
-                                    });
-                                  }))),
-                      SizedBox(
-                        height: 180,
-                      )
-                    ],
-                  ),
-                ),
+                                            _animation = new Tween<double>(
+                                                    begin: _animation.value, end: 0)
+                                                .animate(new CurvedAnimation(
+                                                    curve: Curves
+                                                        .fastLinearToSlowEaseIn,
+                                                    parent: _controller));
+                                            _controller.forward(from: 0.0);
+                                            sub = 0;
+                                            
+                                            //methodchannel
+                                            _channel.invokeMethod('test', _col.getCol().toString());
+                                          });
+                                        }))),
+                            SizedBox(
+                              height: 180,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }else{
+                    return CircularProgressIndicator();
+                  }
+                },
               );
             } else {
               return CircularProgressIndicator();
             }
           }),
     );
+  }
+
+  //メインカラーの取得
+  _getMainColor() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getStringList("ColorLis") ?? ["#a18cd1","#fbc2eb"];
   }
 
   //DBHelperの設定

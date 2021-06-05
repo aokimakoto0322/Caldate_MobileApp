@@ -18,7 +18,7 @@ if (flutterVersionCode == null) {
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '3.5'
+    flutterVersionName = '3.6'
 }
 
 apply plugin: 'com.android.application'
@@ -42,7 +42,7 @@ android {
         applicationId "com.makotoaoki.Caldate2"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 12
+        versionCode 13
         versionName flutterVersionName
         multiDexEnabled true
     }

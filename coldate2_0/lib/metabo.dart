@@ -313,7 +313,7 @@ class _metaboState extends State<metabo> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            FlatButton(
+                            TextButton(
                               child: Text('-'),
                               onPressed: () {
                                 setState(() {
@@ -331,7 +331,7 @@ class _metaboState extends State<metabo> {
                               },
                             ),
                             Text(age.toString() + '歳'),
-                            FlatButton(
+                            TextButton(
                               child: Text('+'),
                               onPressed: () {
                                 setState(() {
@@ -387,7 +387,7 @@ class _metaboState extends State<metabo> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            FlatButton(
+                            TextButton(
                               child: Text('-'),
                               onPressed: () {
                                 setState(() {
@@ -405,7 +405,7 @@ class _metaboState extends State<metabo> {
                               },
                             ),
                             Text(height.toString() + 'cm'),
-                            FlatButton(
+                            TextButton(
                               child: Text('+'),
                               onPressed: () {
                                 setState(() {
@@ -461,7 +461,7 @@ class _metaboState extends State<metabo> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            FlatButton(
+                            TextButton(
                               child: Text('-'),
                               onPressed: () {
                                 setState(() {
@@ -479,7 +479,7 @@ class _metaboState extends State<metabo> {
                               },
                             ),
                             Text(weight.toString() + 'kg'),
-                            FlatButton(
+                            TextButton(
                               child: Text('+'),
                               onPressed: () {
                                 setState(() {

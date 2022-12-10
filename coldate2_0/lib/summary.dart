@@ -61,7 +61,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
               'アプリの使い心地はいかがですか？\nもし気に入っていただけたら応援レビューをお願いいたします。\nご協力ありがとうございます。',
           actionsBuilder: (context, stars) {
             return [
-              FlatButton(
+              TextButton(
                 child: Text('OK'),
                 onPressed: () async {
                   print('Thanks for the' +
@@ -182,7 +182,7 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                                   return Text(
                                                       'データが登録されていません');
                                                 }
-                                                return FlatButton(
+                                                return TextButton(
                                                   onPressed: (){
                                                     myInterstitial2.show();
                                                     Navigator.push(
@@ -192,8 +192,8 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                                                       )
                                                     );
                                                   },
-                                                  textColor: Colors.white,
-                                                  padding: EdgeInsets.all(0),
+                                                  //textColor: Colors.white,
+                                                  //padding: EdgeInsets.all(0),
                                                   child: Container(
                                                       padding:
                                                           EdgeInsets.all(10),

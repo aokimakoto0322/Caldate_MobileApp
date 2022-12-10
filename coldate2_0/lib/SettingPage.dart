@@ -105,13 +105,13 @@ class _SettingpageState extends State<Settingpage> {
                     ),
                     ButtonBar(
                       children: <Widget>[
-                        FlatButton(
+                        TextButton(
                           child: const Text('画像を選択'),
                           onPressed: () {
                             _getAndSaveImageFromDevice(ImageSource.gallery);
                           },
                         ),
-                        FlatButton(
+                        TextButton(
                           child: const Text('初期化'),
                           onPressed: () => FileController.removeImage(),
                         )

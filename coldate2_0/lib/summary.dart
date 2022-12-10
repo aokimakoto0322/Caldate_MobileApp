@@ -298,17 +298,17 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                             children: <Widget>[
                               FadeAnimation(
                                   0.7,
-                                  RaisedButton(
-                                    textColor: Colors.black87,
+                                  ElevatedButton(
+                                    //textColor: Colors.black87,
                                     child: Text(
                                       '1',
                                       style: TextStyle(
                                           color: Colors.black54,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    highlightElevation: 9,
-                                    highlightColor: Color(0xFFa1c4fd),
-                                    shape: StadiumBorder(),
+                                    //highlightElevation: 9,
+                                    //highlightColor: Color(0xFFa1c4fd),
+                                    //shape: StadiumBorder(),
                                     onPressed: () {
                                       setState(() {
                                         sub += 1;
@@ -329,17 +329,17 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                             children: <Widget>[
                               FadeAnimation(
                                   0.7,
-                                  RaisedButton(
-                                    textColor: Colors.black87,
+                                  ElevatedButton(
+                                    //textColor: Colors.black87,
                                     child: Text(
                                       '10',
                                       style: TextStyle(
                                           color: Colors.black54,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    highlightColor: Colors.yellow[300],
-                                    highlightElevation: 9,
-                                    shape: StadiumBorder(),
+                                    //highlightColor: Colors.yellow[300],
+                                    //highlightElevation: 9,
+                                    //shape: StadiumBorder(),
                                     onPressed: () {
                                       buildSetState();
                                       _controller.forward(from: 0.0);
@@ -350,17 +350,17 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                           Column(children: <Widget>[
                             FadeAnimation(
                                 0.7,
-                                RaisedButton(
-                                  textColor: Colors.black87,
+                                ElevatedButton(
+                                  //textColor: Colors.black87,
                                   child: Text(
                                     '100',
                                     style: TextStyle(
                                         color: Colors.black54,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  highlightColor: Colors.red[300],
-                                  highlightElevation: 9,
-                                  shape: StadiumBorder(),
+                                  //highlightColor: Colors.red[300],
+                                  //highlightElevation: 9,
+                                  //shape: StadiumBorder(),
                                   onPressed: () {
                                     setState(() {
                                       sub += 100;
@@ -385,11 +385,11 @@ class _summaryState extends State<Summary> with SingleTickerProviderStateMixin, 
                           1,
                           Container(
                               margin: EdgeInsets.all(10),
-                              child: RaisedButton(
-                                  textColor: Colors.white,
-                                  padding: const EdgeInsets.all(0),
-                                  shape: StadiumBorder(),
-                                  color: Colors.deepPurple[200],
+                              child: ElevatedButton(
+                                  //textColor: Colors.white,
+                                  //padding: const EdgeInsets.all(0),
+                                  //shape: StadiumBorder(),
+                                  //color: Colors.deepPurple[200],
                                   child: Container(
                                     padding: EdgeInsets.all(10),
                                     child: Text('今日の摂取カロリーに追加する'),

@@ -71,11 +71,10 @@ class _metaboState extends State<metabo> {
                                     Text(
                                       g['meta'].toString() + 'kCal',
                                       style: GoogleFonts.libreFranklin(
-                                        foreground: Paint()
-                                          ..shader = _linearGradient,
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold
-                                      ),
+                                          foreground: Paint()
+                                            ..shader = _linearGradient,
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold),
                                     )),
                               ),
                             );
@@ -583,48 +582,49 @@ class _metaboState extends State<metabo> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Container(
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(snapshot.data.toDouble())),
-                  child: FadeAnimation(
-                      1.2,
-                      Container(
-                        margin: EdgeInsets.only(bottom: 150),
-                        child: Center(
-                          child: RaisedButton(
-                            shape: StadiumBorder(),
-                            onPressed: () {
-                              //男性のパターン
-                              //13.397 * weight + 4.799 * height - 5.677 * age + 88.362
-                              if (sex == 0) {
-                                var x1 = 13.397 * weight;
-                                var x2 = 4.799 * height;
-                                var x3 = 5.677 * age;
-                                var x4 = x1 + x2 - x3 + 88.362;
-                                var result = x4 * kiso;
-                                setState(() {
+                    decoration: BoxDecoration(
+                        color:
+                            Colors.white.withOpacity(snapshot.data.toDouble())),
+                    child: FadeAnimation(
+                        1.2,
+                        Container(
+                          margin: EdgeInsets.only(bottom: 150),
+                          child: Center(
+                            child: ElevatedButton(
+                              //shape: StadiumBorder(),
+                              onPressed: () {
+                                //男性のパターン
+                                //13.397 * weight + 4.799 * height - 5.677 * age + 88.362
+                                if (sex == 0) {
+                                  var x1 = 13.397 * weight;
+                                  var x2 = 4.799 * height;
+                                  var x3 = 5.677 * age;
+                                  var x4 = x1 + x2 - x3 + 88.362;
+                                  var result = x4 * kiso;
+                                  setState(() {
+                                    InsertMetabo(result.toInt());
+                                    me.setMetabo(result.toInt());
+                                  });
+                                } else if (sex == 1) {
+                                  var x1 = 9.247 * weight;
+                                  var x2 = 3.098 * height;
+                                  var x3 = 4.33 * age;
+                                  var x4 = x1 + x2 - x3 + 447.593;
+                                  var result = x4 * kiso;
                                   InsertMetabo(result.toInt());
-                                  me.setMetabo(result.toInt());
-                                });
-                              } else if (sex == 1) {
-                                var x1 = 9.247 * weight;
-                                var x2 = 3.098 * height;
-                                var x3 = 4.33 * age;
-                                var x4 = x1 + x2 - x3 + 447.593;
-                                var result = x4 * kiso;
-                                InsertMetabo(result.toInt());
-                                setState(() {
-                                  me.setMetabo(result.toInt());
-                                });
-                              }
-                            },
-                            child: Text('基礎代謝を算出する'),
+                                  setState(() {
+                                    me.setMetabo(result.toInt());
+                                  });
+                                }
+                              },
+                              child: Text('基礎代謝を算出する'),
+                            ),
                           ),
-                        ),
-                      )),
-                );
+                        )),
+                  );
                 } else {
                   return CircularProgressIndicator();
                 }
-                
               })
         ]))
       ],
